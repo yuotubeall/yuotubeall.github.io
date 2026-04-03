@@ -7,934 +7,365 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+Hebrew:wght@300;400;600;700&family=Heebo:wght@300;400;500;600&display=swap" rel="stylesheet" />
   <script src="https://accounts.google.com/gsi/client" async defer></script>
-
   <style>
     :root {
-      --bg:         #0D0C0E;
-      --bg2:        #141215;
-      --bg3:        #1C1A1E;
-      --bg4:        #231F26;
-      --border:     #2A2630;
-      --border2:    #3A3542;
-      --text:       #F0EBF8;
-      --text2:      #9B93AB;
-      --text3:      #5E5670;
-      --accent:     #A855F7;
-      --accent2:    #7C3AED;
-      --accent-dim: rgba(168,85,247,.1);
-      --accent-mid: rgba(168,85,247,.22);
-      --accent-glow:rgba(168,85,247,.35);
-      --gold:       #F59E0B;
-      --gold-dim:   rgba(245,158,11,.12);
-      --red:        #EF4444;
-      --red-dim:    rgba(239,68,68,.1);
-      --green:      #22C55E;
-      --green-dim:  rgba(34,197,94,.1);
-      --radius:     12px;
-      --radius-sm:  8px;
-      --radius-xs:  5px;
-      --shadow-sm:  0 1px 4px rgba(0,0,0,.4);
-      --shadow-md:  0 8px 32px rgba(0,0,0,.6),0 2px 8px rgba(0,0,0,.3);
-      --shadow-glow:0 0 40px rgba(168,85,247,.15);
-      --font:       'Heebo', system-ui, sans-serif;
-      --font-d:     'Noto Serif Hebrew', Georgia, serif;
-      --sw:         260px;
-      --hh:         60px;
+      --bg:#0D0C0E;--bg2:#141215;--bg3:#1C1A1E;--bg4:#231F26;
+      --border:#2A2630;--border2:#3A3542;
+      --text:#F0EBF8;--text2:#9B93AB;--text3:#5E5670;
+      --accent:#A855F7;--accent2:#7C3AED;
+      --accent-dim:rgba(168,85,247,.1);--accent-mid:rgba(168,85,247,.22);--accent-glow:rgba(168,85,247,.35);
+      --gold:#F59E0B;--red:#EF4444;--red-dim:rgba(239,68,68,.1);
+      --green:#22C55E;--green-dim:rgba(34,197,94,.1);
+      --radius:12px;--radius-sm:8px;--radius-xs:5px;
+      --shadow-sm:0 1px 4px rgba(0,0,0,.4);
+      --shadow-md:0 8px 32px rgba(0,0,0,.6),0 2px 8px rgba(0,0,0,.3);
+      --font:'Heebo',system-ui,sans-serif;--font-d:'Noto Serif Hebrew',Georgia,serif;
+      --sw:260px;--hh:60px;
     }
     [data-theme="light"] {
-      --bg:         #F8F6FC;
-      --bg2:        #FFFFFF;
-      --bg3:        #F0ECF8;
-      --bg4:        #E8E2F4;
-      --border:     #DDD8EC;
-      --border2:    #C8C0DF;
-      --text:       #1A1525;
-      --text2:      #5A5070;
-      --text3:      #9B94B0;
-      --accent:     #7C3AED;
-      --accent2:    #5B21B6;
-      --accent-dim: rgba(124,58,237,.08);
-      --accent-mid: rgba(124,58,237,.16);
-      --accent-glow:rgba(124,58,237,.2);
-      --gold:       #D97706;
-      --gold-dim:   rgba(217,119,6,.1);
-      --red:        #DC2626;
-      --red-dim:    rgba(220,38,38,.08);
-      --green:      #16A34A;
-      --green-dim:  rgba(22,163,74,.08);
-      --shadow-sm:  0 1px 4px rgba(0,0,0,.08);
-      --shadow-md:  0 8px 32px rgba(0,0,0,.12),0 2px 8px rgba(0,0,0,.06);
-      --shadow-glow:0 0 40px rgba(124,58,237,.1);
+      --bg:#F8F6FC;--bg2:#FFFFFF;--bg3:#F0ECF8;--bg4:#E8E2F4;
+      --border:#DDD8EC;--border2:#C8C0DF;
+      --text:#1A1525;--text2:#5A5070;--text3:#9B94B0;
+      --accent:#7C3AED;--accent2:#5B21B6;
+      --accent-dim:rgba(124,58,237,.08);--accent-mid:rgba(124,58,237,.16);--accent-glow:rgba(124,58,237,.2);
+      --red:#DC2626;--red-dim:rgba(220,38,38,.08);--green:#16A34A;
+      --shadow-sm:0 1px 4px rgba(0,0,0,.08);--shadow-md:0 8px 32px rgba(0,0,0,.12);
     }
-
     *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
     html{scroll-behavior:smooth}
-    body{
-      font-family:var(--font);background:var(--bg);color:var(--text);
-      font-size:14px;line-height:1.6;min-height:100vh;
-      transition:background .25s,color .25s;
-    }
+    body{font-family:var(--font);background:var(--bg);color:var(--text);font-size:14px;line-height:1.6;min-height:100vh;transition:background .25s,color .25s}
     a{color:inherit;text-decoration:none}
     button{cursor:pointer;font-family:var(--font)}
     input,select,textarea{font-family:var(--font)}
+    ::-webkit-scrollbar{width:5px;height:5px}::-webkit-scrollbar-track{background:transparent}::-webkit-scrollbar-thumb{background:var(--border2);border-radius:10px}
 
-    /* ── Noise texture overlay ── */
-    body::before{
-      content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
-      background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.025'/%3E%3C/svg%3E");
-      opacity:.4;
-    }
-
-    /* ── Scrollbar ── */
-    ::-webkit-scrollbar{width:5px;height:5px}
-    ::-webkit-scrollbar-track{background:transparent}
-    ::-webkit-scrollbar-thumb{background:var(--border2);border-radius:10px}
-
-    /* ══ HEADER ══ */
-    .hdr{
-      position:sticky;top:0;z-index:200;
-      height:var(--hh);
-      background:rgba(13,12,14,.85);
-      backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
-      border-bottom:1px solid var(--border);
-      display:flex;align-items:center;
-      padding:0 1.5rem;gap:1rem;
-    }
-    [data-theme="light"] .hdr{background:rgba(248,246,252,.88)}
-
-    .logo{display:flex;align-items:center;gap:8px;flex-shrink:0;text-decoration:none}
-    .logo-icon{
-      width:32px;height:32px;border-radius:9px;
-      background:linear-gradient(135deg,var(--accent2),var(--accent));
-      display:flex;align-items:center;justify-content:center;
-      box-shadow:0 0 16px var(--accent-glow);
-      flex-shrink:0;
-    }
+    /* HEADER */
+    .hdr{position:sticky;top:0;z-index:200;height:var(--hh);background:rgba(13,12,14,.88);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 1.5rem;gap:1rem}
+    [data-theme="light"] .hdr{background:rgba(248,246,252,.9)}
+    .logo{display:flex;align-items:center;gap:8px;flex-shrink:0}
+    .logo-icon{width:32px;height:32px;border-radius:9px;background:linear-gradient(135deg,var(--accent2),var(--accent));display:flex;align-items:center;justify-content:center;box-shadow:0 0 16px var(--accent-glow);flex-shrink:0}
     .logo-w{font-family:var(--font-d);font-size:1.2rem;font-weight:700;color:var(--text);letter-spacing:-.03em}
-    .logo-sub{font-size:10px;color:var(--text3);font-weight:400;margin-right:2px}
-
     .hdr-sep{width:1px;height:20px;background:var(--border);flex-shrink:0}
-
     .srch{flex:1;max-width:420px;position:relative}
     .srch-ico{position:absolute;left:11px;top:50%;transform:translateY(-50%);color:var(--text3);pointer-events:none;z-index:1}
-    .srch input{
-      width:100%;background:var(--bg3);
-      border:1px solid var(--border);
-      border-radius:var(--radius-sm);
-      padding:.45rem .9rem .45rem 2.2rem;
-      font-size:13px;color:var(--text);outline:none;
-      transition:border-color .15s,background .15s,box-shadow .15s;
-      direction:rtl;
-    }
-    .srch input:focus{border-color:var(--accent);background:var(--bg2);box-shadow:0 0 0 3px var(--accent-dim)}
+    .srch input{width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius-sm);padding:.45rem .9rem .45rem 2.2rem;font-size:13px;color:var(--text);outline:none;transition:border-color .15s,box-shadow .15s;direction:rtl}
+    .srch input:focus{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-dim)}
     .srch input::placeholder{color:var(--text3)}
-    .srch-clear{
-      position:absolute;left:10px;top:50%;transform:translateY(-50%);
-      background:none;border:none;color:var(--text3);padding:2px;
-      display:none;border-radius:50%;transition:color .12s;
-    }
-    .srch-clear:hover{color:var(--text2)}
-
+    .srch-clear{position:absolute;left:10px;top:50%;transform:translateY(-50%);background:none;border:none;color:var(--text3);padding:2px;display:none;border-radius:50%}
     .hdr-right{display:flex;align-items:center;gap:.5rem;margin-right:auto}
-
-    .ico-btn{
-      width:34px;height:34px;border-radius:var(--radius-sm);
-      border:1px solid var(--border);background:transparent;
-      display:flex;align-items:center;justify-content:center;
-      color:var(--text2);transition:all .15s;position:relative;
-    }
+    .ico-btn{width:34px;height:34px;border-radius:var(--radius-sm);border:1px solid var(--border);background:transparent;display:flex;align-items:center;justify-content:center;color:var(--text2);transition:all .15s}
     .ico-btn:hover{border-color:var(--border2);color:var(--text);background:var(--bg3)}
-    .ico-btn .badge{
-      position:absolute;top:-4px;left:-4px;
-      width:16px;height:16px;border-radius:50%;
-      background:var(--accent);color:#fff;font-size:9px;font-weight:700;
-      display:flex;align-items:center;justify-content:center;
-      border:2px solid var(--bg);
-    }
-
-    .btn-primary{
-      display:flex;align-items:center;gap:.4rem;
-      padding:.45rem 1rem;
-      background:linear-gradient(135deg,var(--accent2),var(--accent));
-      color:#fff;border:none;border-radius:var(--radius-sm);
-      font-size:13px;font-weight:600;
-      transition:opacity .15s,transform .1s,box-shadow .15s;
-      box-shadow:0 2px 12px var(--accent-glow);
-      white-space:nowrap;
-    }
-    .btn-primary:hover{opacity:.88;transform:translateY(-1px);box-shadow:0 4px 20px var(--accent-glow)}
-    .btn-primary:active{transform:translateY(0)}
-
-    /* ── User Avatar in header ── */
-    .user-chip{
-      display:flex;align-items:center;gap:.5rem;
-      padding:.3rem .7rem .3rem .3rem;
-      border:1px solid var(--border);border-radius:40px;
-      background:var(--bg3);cursor:pointer;
-      transition:all .15s;position:relative;
-    }
+    .btn-primary{display:flex;align-items:center;gap:.4rem;padding:.45rem 1rem;background:linear-gradient(135deg,var(--accent2),var(--accent));color:#fff;border:none;border-radius:var(--radius-sm);font-size:13px;font-weight:600;transition:opacity .15s,transform .1s;box-shadow:0 2px 12px var(--accent-glow);white-space:nowrap}
+    .btn-primary:hover{opacity:.88;transform:translateY(-1px)}
+    .user-chip{display:flex;align-items:center;gap:.5rem;padding:.3rem .7rem .3rem .3rem;border:1px solid var(--border);border-radius:40px;background:var(--bg3);cursor:pointer;transition:all .15s;position:relative}
     .user-chip:hover{border-color:var(--border2);background:var(--bg4)}
-    .user-ava{
-      width:26px;height:26px;border-radius:50%;overflow:hidden;
-      background:linear-gradient(135deg,var(--accent2),var(--accent));
-      display:flex;align-items:center;justify-content:center;
-      font-size:11px;font-weight:700;color:#fff;flex-shrink:0;
-    }
+    .user-ava{width:26px;height:26px;border-radius:50%;overflow:hidden;background:linear-gradient(135deg,var(--accent2),var(--accent));display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:#fff;flex-shrink:0}
     .user-ava img{width:100%;height:100%;object-fit:cover}
     .user-name{font-size:12px;font-weight:500;color:var(--text);max-width:100px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-    .admin-crown{color:var(--gold);margin-right:2px}
-
-    /* ── User Dropdown ── */
-    .user-drop{
-      position:absolute;top:calc(100% + 8px);left:0;
-      background:var(--bg2);border:1px solid var(--border);
-      border-radius:var(--radius);box-shadow:var(--shadow-md);
-      min-width:180px;z-index:300;
-      opacity:0;pointer-events:none;transform:translateY(-6px);
-      transition:opacity .15s,transform .15s;
-    }
+    .user-drop{position:absolute;top:calc(100% + 8px);left:0;background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow-md);min-width:180px;z-index:300;opacity:0;pointer-events:none;transform:translateY(-6px);transition:opacity .15s,transform .15s}
     .user-drop.open{opacity:1;pointer-events:all;transform:translateY(0)}
-    .drop-item{
-      display:flex;align-items:center;gap:.55rem;
-      padding:.65rem 1rem;font-size:13px;color:var(--text2);
-      background:none;border:none;width:100%;text-align:right;
-      transition:background .12s,color .12s;cursor:pointer;
-    }
+    .drop-item{display:flex;align-items:center;gap:.55rem;padding:.65rem 1rem;font-size:13px;color:var(--text2);background:none;border:none;width:100%;text-align:right;transition:background .12s,color .12s;cursor:pointer}
     .drop-item:hover{background:var(--bg3);color:var(--text)}
-    .drop-item.danger{color:var(--red)}
-    .drop-item.danger:hover{background:var(--red-dim);color:var(--red)}
+    .drop-item.danger{color:var(--red)}.drop-item.danger:hover{background:var(--red-dim)}
     .drop-sep{height:1px;background:var(--border);margin:.3rem 0}
     .drop-head{padding:.75rem 1rem .3rem;font-size:11px;color:var(--text3);font-weight:500;letter-spacing:.06em;text-transform:uppercase}
 
-    /* ══ LAYOUT ══ */
+    /* LAYOUT */
     .layout{display:flex;flex:1;max-width:1360px;margin:0 auto;width:100%;padding:0 1.5rem}
 
-    /* ══ SIDEBAR ══ */
-    .sdb{
-      width:var(--sw);flex-shrink:0;
-      padding:1.4rem 0 1.4rem 1rem;
-      position:sticky;top:var(--hh);
-      height:calc(100vh - var(--hh));
-      overflow-y:auto;scrollbar-width:none;
-    }
+    /* SIDEBAR */
+    .sdb{width:var(--sw);flex-shrink:0;padding:1.4rem 0 1.4rem 1rem;position:sticky;top:var(--hh);height:calc(100vh - var(--hh));overflow-y:auto;scrollbar-width:none}
     .sdb::-webkit-scrollbar{display:none}
     .sdb-sec{margin-bottom:0}
-    .sdb-lbl{
-      font-size:10px;font-weight:600;letter-spacing:.12em;
-      text-transform:uppercase;color:var(--text3);
-      padding:0 .5rem;margin-bottom:.4rem;display:block;
-    }
-    .t-item{
-      display:flex;align-items:center;justify-content:space-between;
-      padding:.44rem .5rem;border-radius:var(--radius-sm);
-      font-size:13px;color:var(--text2);
-      background:none;border:none;width:100%;text-align:right;
-      transition:background .12s,color .12s;cursor:pointer;
-      gap:.3rem;
-    }
+    .sdb-lbl{font-size:10px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--text3);padding:0 .5rem;margin-bottom:.4rem;display:block}
+    .t-item{display:flex;align-items:center;justify-content:space-between;padding:.44rem .5rem;border-radius:var(--radius-sm);font-size:13px;color:var(--text2);background:none;border:none;width:100%;text-align:right;transition:background .12s,color .12s;cursor:pointer;gap:.3rem}
     .t-item:hover{background:var(--bg3);color:var(--text)}
     .t-item.on{background:var(--accent-dim);color:var(--accent);font-weight:500}
-    .t-item.on:hover{background:var(--accent-mid)}
     .t-inner{display:flex;align-items:center;gap:.45rem;min-width:0;flex:1}
     .t-lbl{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
     .t-dot{width:7px;height:7px;border-radius:2px;flex-shrink:0}
-    .t-cnt{
-      font-size:11px;color:var(--text3);
-      background:var(--bg4);border:1px solid var(--border);
-      border-radius:4px;padding:1px 5px;line-height:1.7;flex-shrink:0;
-      font-variant-numeric:tabular-nums;min-width:22px;text-align:center;
-    }
+    .t-cnt{font-size:11px;color:var(--text3);background:var(--bg4);border:1px solid var(--border);border-radius:4px;padding:1px 5px;line-height:1.7;flex-shrink:0;min-width:22px;text-align:center}
     .t-item.on .t-cnt{background:var(--accent-mid);border-color:transparent;color:var(--accent)}
-
     .sdb-div{height:1px;background:var(--border);margin:1rem .5rem}
-
-    .add-t-btn{
-      display:flex;align-items:center;gap:.5rem;
-      padding:.44rem .5rem;border-radius:var(--radius-sm);
-      font-size:13px;color:var(--text3);
-      background:none;border:1px dashed var(--border);width:100%;text-align:right;
-      transition:all .15s;cursor:pointer;
-    }
+    .add-t-btn{display:flex;align-items:center;gap:.5rem;padding:.44rem .5rem;border-radius:var(--radius-sm);font-size:13px;color:var(--text3);background:none;border:1px dashed var(--border);width:100%;text-align:right;transition:all .15s;cursor:pointer}
     .add-t-btn:hover{border-color:var(--accent);color:var(--accent);background:var(--accent-dim)}
-
-    /* ── Stats sidebar ── */
-    .stats-box{
-      background:var(--bg3);border:1px solid var(--border);
-      border-radius:var(--radius);padding:1rem .8rem;
-      display:grid;grid-template-columns:1fr 1fr;gap:.5rem 0;
-    }
-    .stat-item{
-      text-align:center;padding:.4rem .5rem;
-      border-radius:var(--radius-sm);
-    }
+    .stats-box{background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius);padding:1rem .8rem;display:grid;grid-template-columns:1fr 1fr;gap:.5rem 0}
+    .stat-item{text-align:center;padding:.4rem .5rem}
     .stat-n{font-size:1.25rem;font-weight:700;color:var(--text);font-family:var(--font-d);line-height:1.2}
     .stat-l{font-size:10px;color:var(--text3);margin-top:3px}
 
-    /* ══ MAIN ══ */
-    .main{
-      flex:1;padding:1.5rem 0 2rem;
-      min-width:0;border-right:1px solid var(--border);
-      padding-right:1.5rem;
-    }
-
-    .feed-hdr{
-      display:flex;align-items:center;justify-content:space-between;
-      margin-bottom:1.2rem;padding-bottom:1rem;
-      border-bottom:1px solid var(--border);
-      gap:1rem;
-    }
+    /* MAIN */
+    .main{flex:1;padding:1.5rem 0 2rem;min-width:0;border-right:1px solid var(--border);padding-right:1.5rem}
+    .feed-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:1.2rem;padding-bottom:1rem;border-bottom:1px solid var(--border);gap:1rem}
     .feed-hdr-l{display:flex;flex-direction:column;gap:.2rem}
     .feed-title{font-family:var(--font-d);font-size:1.4rem;font-weight:700;color:var(--text);letter-spacing:-.02em}
     .feed-sub{font-size:12px;color:var(--text3)}
     .feed-hdr-r{display:flex;align-items:center;gap:.5rem}
-
-    .sort-btn{
-      display:flex;align-items:center;gap:.35rem;
-      padding:.38rem .8rem;border-radius:var(--radius-sm);
-      border:1px solid var(--border);background:var(--bg3);
-      font-size:12px;color:var(--text2);transition:all .12s;
-    }
+    .sort-btn{display:flex;align-items:center;gap:.35rem;padding:.38rem .8rem;border-radius:var(--radius-sm);border:1px solid var(--border);background:var(--bg3);font-size:12px;color:var(--text2);transition:all .12s}
     .sort-btn:hover{border-color:var(--border2);color:var(--text)}
     .sort-btn.on{border-color:var(--accent);color:var(--accent);background:var(--accent-dim)}
 
-    /* ══ CARDS ══ */
-    .feed{display:flex;flex-direction:column;gap:10px}
-
-    .card{
-      background:var(--bg2);border:1px solid var(--border);
-      border-radius:var(--radius);overflow:hidden;
-      display:grid;grid-template-columns:200px 1fr;
-      transition:border-color .2s,box-shadow .2s,transform .15s;
-      animation:cardIn .35s ease both;
-      position:relative;
-    }
+    /* CARDS */
+    .feed{display:flex;flex-direction:column;gap:12px}
+    .card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;display:grid;grid-template-columns:220px 1fr;transition:border-color .2s;animation:cardIn .35s ease both}
     @keyframes cardIn{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
-    .card:hover{border-color:var(--border2);box-shadow:var(--shadow-sm),0 0 0 1px var(--border2)}
+    .card:hover{border-color:var(--border2)}
 
-    .c-thumb{position:relative;background:var(--bg3);overflow:hidden}
+    /* Video thumbnail + embed */
+    .c-vid{position:relative;background:#000;overflow:hidden}
     .c-ratio{padding-bottom:56.25%;position:relative}
-    .c-ratio iframe{position:absolute;inset:0;width:100%;height:100%;border:none}
+    .c-thumb-wrap{position:absolute;inset:0;cursor:pointer;z-index:2;transition:opacity .25s}
+    .c-thumb-wrap img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .3s,filter .3s}
+    .c-thumb-wrap:hover img{transform:scale(1.04);filter:brightness(.78)}
+    .c-play-circle{position:absolute;inset:0;display:flex;align-items:center;justify-content:center}
+    .c-play-btn{width:40px;height:40px;border-radius:50%;background:rgba(168,85,247,.88);display:flex;align-items:center;justify-content:center;box-shadow:0 4px 20px rgba(168,85,247,.5);transition:transform .2s,background .2s}
+    .c-thumb-wrap:hover .c-play-btn{transform:scale(1.12);background:var(--accent)}
+    .c-new-badge{position:absolute;top:8px;right:8px;z-index:3;background:var(--green);color:#fff;font-size:9px;font-weight:700;text-transform:uppercase;border-radius:4px;padding:2px 7px}
+    .c-views{position:absolute;bottom:6px;left:6px;z-index:3;background:rgba(0,0,0,.72);color:#fff;font-size:10px;font-weight:500;border-radius:4px;padding:2px 6px;display:flex;align-items:center;gap:3px}
 
-    /* Overlay play button before embed loads */
-    .c-thumb-placeholder{
-      position:absolute;inset:0;
-      display:flex;align-items:center;justify-content:center;
-      background:var(--bg3);cursor:pointer;z-index:1;
-    }
-    .c-play{
-      width:44px;height:44px;border-radius:50%;
-      background:rgba(168,85,247,.9);
-      display:flex;align-items:center;justify-content:center;
-      transition:transform .15s,background .15s;
-    }
-    .c-thumb-placeholder:hover .c-play{background:var(--accent);transform:scale(1.08)}
-
-    .c-new-badge{
-      position:absolute;top:8px;right:8px;z-index:2;
-      background:var(--green);color:#fff;
-      font-size:9px;font-weight:700;letter-spacing:.08em;
-      text-transform:uppercase;border-radius:4px;
-      padding:2px 7px;
-    }
-
-    .c-body{padding:1rem 1.2rem;display:flex;flex-direction:column;gap:.45rem;min-width:0}
+    /* Card body */
+    .c-body{padding:.9rem 1.1rem;display:flex;flex-direction:column;gap:.4rem;min-width:0}
     .c-top{display:flex;align-items:center;gap:.45rem;flex-wrap:wrap}
-    .c-cat{
-      display:inline-flex;align-items:center;gap:.3rem;
-      font-size:11px;font-weight:600;border-radius:5px;
-      padding:2px 8px;letter-spacing:.02em;
-    }
+    .c-cat{display:inline-flex;align-items:center;gap:.3rem;font-size:11px;font-weight:600;border-radius:5px;padding:2px 8px}
     .c-cat-dot{width:5px;height:5px;border-radius:50%}
-
-    .c-title{
-      font-family:var(--font-d);font-size:14px;font-weight:600;color:var(--text);
-      line-height:1.4;
-      display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;
-    }
-    .c-desc{
-      font-size:12px;color:var(--text2);line-height:1.6;
-      display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;
-    }
-
-    .c-foot{
-      display:flex;align-items:center;justify-content:space-between;
-      margin-top:auto;padding-top:.5rem;gap:.5rem;
-    }
-    .c-author{display:flex;align-items:center;gap:.45rem;font-size:12px;color:var(--text2);min-width:0}
-    .ava{
-      width:22px;height:22px;border-radius:50%;overflow:hidden;
-      background:var(--accent-dim);border:1px solid var(--accent-mid);
-      display:flex;align-items:center;justify-content:center;
-      font-size:9px;font-weight:700;color:var(--accent);flex-shrink:0;
-    }
+    .c-title{font-family:var(--font-d);font-size:14px;font-weight:600;color:var(--text);line-height:1.4;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+    .c-desc{font-size:12px;color:var(--text2);line-height:1.6;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+    .c-foot{display:flex;align-items:center;justify-content:space-between;margin-top:auto;padding-top:.4rem;gap:.5rem}
+    .c-author{display:flex;align-items:center;gap:.4rem;font-size:12px;color:var(--text2);min-width:0}
+    .ava{width:22px;height:22px;border-radius:50%;overflow:hidden;background:var(--accent-dim);border:1px solid var(--accent-mid);display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;color:var(--accent);flex-shrink:0}
     .ava img{width:100%;height:100%;object-fit:cover}
     .c-author-name{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
     .c-time{font-size:11px;color:var(--text3);white-space:nowrap;flex-shrink:0}
-
-    .c-acts{display:flex;align-items:center;gap:.25rem;flex-shrink:0}
-    .act-btn{
-      display:flex;align-items:center;gap:.3rem;
-      padding:.3rem .55rem;border-radius:var(--radius-sm);
-      border:1px solid transparent;background:transparent;
-      color:var(--text3);font-size:12px;transition:all .15s;
-    }
+    .c-acts{display:flex;align-items:center;gap:.2rem;flex-shrink:0}
+    .act-btn{display:flex;align-items:center;gap:.28rem;padding:.28rem .5rem;border-radius:var(--radius-sm);border:1px solid transparent;background:transparent;color:var(--text3);font-size:12px;transition:all .15s;white-space:nowrap}
     .act-btn:hover{border-color:var(--border);background:var(--bg3);color:var(--text2)}
     .act-btn.lkd{color:var(--red);border-color:var(--red-dim);background:var(--red-dim)}
-    .act-btn.lkd:hover{opacity:.85}
-    .act-btn.del-btn{color:var(--text3)}
     .act-btn.del-btn:hover{color:var(--red);border-color:var(--red-dim);background:var(--red-dim)}
 
-    /* ══ VIDEO LIGHTBOX ══ */
-    .vl-ovl{
-      position:fixed;inset:0;z-index:700;
-      background:rgba(0,0,0,.85);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);
-      display:flex;align-items:center;justify-content:center;padding:1rem;
-      opacity:0;pointer-events:none;transition:opacity .22s;
-    }
-    .vl-ovl.open{opacity:1;pointer-events:all}
-    .vl-wrap{
-      width:100%;max-width:860px;
-      display:flex;flex-direction:column;gap:0;
-      transform:translateY(18px) scale(.97);
-      transition:transform .25s cubic-bezier(.16,1,.3,1);
-    }
-    .vl-ovl.open .vl-wrap{transform:translateY(0) scale(1)}
-    .vl-video{
-      position:relative;padding-bottom:56.25%;
-      border-radius:14px 14px 0 0;overflow:hidden;
-      background:#000;box-shadow:0 0 60px rgba(0,0,0,.8);
-    }
-    .vl-video iframe{position:absolute;inset:0;width:100%;height:100%;border:none}
-    .vl-info{
-      background:var(--bg2);border:1px solid var(--border);border-top:none;
-      border-radius:0 0 14px 14px;
-      padding:1rem 1.3rem;
-      display:flex;align-items:flex-start;justify-content:space-between;gap:1rem;
-    }
-    .vl-info-l{flex:1;min-width:0;display:flex;flex-direction:column;gap:.3rem}
-    .vl-cat{display:inline-flex;align-items:center;gap:.3rem;font-size:11px;font-weight:600;border-radius:5px;padding:2px 8px;margin-bottom:.1rem}
-    .vl-title{font-family:var(--font-d);font-size:1.1rem;font-weight:700;color:var(--text);line-height:1.35}
-    .vl-desc{font-size:13px;color:var(--text2);line-height:1.6;margin-top:.1rem}
-    .vl-author{display:flex;align-items:center;gap:.5rem;font-size:12px;color:var(--text3);margin-top:.4rem}
-    .vl-info-r{display:flex;align-items:center;gap:.4rem;flex-shrink:0}
-    .vl-close{
-      position:fixed;top:1rem;left:1rem;
-      width:36px;height:36px;border-radius:50%;
-      background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.15);
-      color:#fff;display:flex;align-items:center;justify-content:center;
-      transition:all .15s;cursor:pointer;z-index:1;
-    }
-    .vl-close:hover{background:rgba(255,255,255,.2)}
+    /* Card full-width row for comments */
+    .card-comments{grid-column:1/-1}
 
-    /* ── Thumbnail card (replaces inline iframe) ── */
-    .c-thumb{position:relative;background:var(--bg3);overflow:hidden;cursor:pointer}
-    .c-thumb-img{
-      position:absolute;inset:0;width:100%;height:100%;
-      object-fit:cover;transition:transform .3s ease,filter .3s ease;
-    }
-    .c-thumb-overlay{
-      position:absolute;inset:0;
-      background:linear-gradient(135deg,rgba(0,0,0,.35),rgba(0,0,0,.1));
-      display:flex;align-items:center;justify-content:center;
-      transition:background .2s;
-    }
-    .c-thumb:hover .c-thumb-img{transform:scale(1.05);filter:brightness(.85)}
-    .c-thumb:hover .c-thumb-overlay{background:linear-gradient(135deg,rgba(0,0,0,.5),rgba(0,0,0,.25))}
-    .c-play-btn{
-      width:42px;height:42px;border-radius:50%;
-      background:rgba(168,85,247,.92);
-      display:flex;align-items:center;justify-content:center;
-      transition:transform .2s,background .2s;
-      box-shadow:0 4px 20px rgba(168,85,247,.5);
-    }
-    .c-thumb:hover .c-play-btn{transform:scale(1.1);background:var(--accent)}
+    /* COMMENTS */
+    .comments-section{display:none;flex-direction:column;gap:.55rem;padding:.8rem 1.1rem 1rem;border-top:1px solid var(--border);background:var(--bg);animation:cardIn .2s ease}
+    .comments-section.open{display:flex}
+    .comment-item{display:flex;gap:.5rem}
+    .comment-ava{width:26px;height:26px;border-radius:50%;overflow:hidden;background:var(--accent-dim);border:1px solid var(--accent-mid);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:var(--accent);flex-shrink:0}
+    .comment-ava img{width:100%;height:100%;object-fit:cover}
+    .comment-bubble{flex:1;background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius-sm);padding:.5rem .75rem}
+    .comment-author{font-weight:600;color:var(--text);font-size:11px;margin-bottom:.1rem}
+    .comment-text{color:var(--text2);font-size:12px;line-height:1.55}
+    .comment-time{font-size:10px;color:var(--text3);margin-top:.2rem}
+    .comment-input-row{display:flex;gap:.4rem;align-items:flex-end;padding-top:.2rem}
+    .comment-input{flex:1;background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius-sm);padding:.42rem .7rem;font-size:13px;color:var(--text);outline:none;resize:none;height:36px;max-height:90px;direction:rtl;line-height:1.5;transition:border-color .15s,box-shadow .15s;overflow:hidden}
+    .comment-input:focus{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-dim)}
+    .comment-input::placeholder{color:var(--text3)}
+    .comment-send{padding:.4rem .85rem;background:linear-gradient(135deg,var(--accent2),var(--accent));border:none;color:#fff;border-radius:var(--radius-sm);font-size:12px;font-weight:600;transition:opacity .15s;flex-shrink:0;height:36px}
+    .comment-send:hover{opacity:.85}
+    .comment-send:disabled{opacity:.5;cursor:not-allowed}
+    .comments-empty{font-size:12px;color:var(--text3);text-align:center;padding:.4rem 0}
 
-    /* ══ SKELETON ══ */
+    /* SKELETON */
     @keyframes shim{0%{background-position:-600px 0}100%{background-position:600px 0}}
-    .skel{
-      background:var(--bg2);border:1px solid var(--border);
-      border-radius:var(--radius);display:grid;
-      grid-template-columns:200px 1fr;overflow:hidden;height:120px;
-    }
+    .skel{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);display:grid;grid-template-columns:220px 1fr;overflow:hidden;height:124px}
     .sk-t{background:var(--bg3)}
-    .sk-b{padding:1rem 1.2rem;display:flex;flex-direction:column;gap:.6rem}
-    .sk-l{
-      border-radius:4px;height:10px;
-      background:linear-gradient(90deg,var(--bg3) 25%,var(--bg4) 50%,var(--bg3) 75%);
-      background-size:600px 100%;animation:shim 1.5s ease infinite;
-    }
+    .sk-b{padding:1rem 1.1rem;display:flex;flex-direction:column;gap:.6rem}
+    .sk-l{border-radius:4px;height:10px;background:linear-gradient(90deg,var(--bg3) 25%,var(--bg4) 50%,var(--bg3) 75%);background-size:600px 100%;animation:shim 1.5s ease infinite}
     .w30{width:30%}.w45{width:45%}.w65{width:65%}.w80{width:80%}
 
-    /* ══ EMPTY STATE ══ */
-    .empty{
-      display:flex;flex-direction:column;align-items:center;
-      padding:4rem 2rem;gap:.75rem;text-align:center;
-    }
-    .empty-ico{
-      width:56px;height:56px;border-radius:14px;
-      background:var(--bg3);border:1px solid var(--border);
-      display:flex;align-items:center;justify-content:center;
-      color:var(--text3);margin-bottom:.3rem;
-    }
+    /* EMPTY */
+    .empty{display:flex;flex-direction:column;align-items:center;padding:4rem 2rem;gap:.75rem;text-align:center}
+    .empty-ico{width:56px;height:56px;border-radius:14px;background:var(--bg3);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;color:var(--text3);margin-bottom:.3rem}
     .empty h3{font-family:var(--font-d);font-size:1.1rem;font-weight:600;color:var(--text)}
     .empty p{font-size:13px;color:var(--text2);max-width:300px;line-height:1.6}
-    .empty-btn{
-      margin-top:.5rem;padding:.5rem 1.2rem;
-      background:var(--accent-dim);border:1px solid var(--accent-mid);
-      color:var(--accent);border-radius:var(--radius-sm);font-size:13px;font-weight:500;
-      transition:all .15s;
-    }
+    .empty-btn{margin-top:.5rem;padding:.5rem 1.2rem;background:var(--accent-dim);border:1px solid var(--accent-mid);color:var(--accent);border-radius:var(--radius-sm);font-size:13px;font-weight:500;transition:all .15s}
     .empty-btn:hover{background:var(--accent-mid)}
 
-    /* ══ OVERLAY / MODAL ══ */
-    .ovl{
-      position:fixed;inset:0;z-index:500;
-      background:rgba(0,0,0,.6);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);
-      display:flex;align-items:center;justify-content:center;padding:1rem;
-      opacity:0;pointer-events:none;transition:opacity .2s;
-    }
+    /* MODALS */
+    .ovl{position:fixed;inset:0;z-index:500;background:rgba(0,0,0,.6);backdrop-filter:blur(8px);display:flex;align-items:center;justify-content:center;padding:1rem;opacity:0;pointer-events:none;transition:opacity .2s}
     .ovl.open{opacity:1;pointer-events:all}
-    .modal{
-      background:var(--bg2);border:1px solid var(--border);
-      border-radius:16px;width:100%;max-width:500px;
-      box-shadow:var(--shadow-md),var(--shadow-glow);
-      transform:translateY(16px) scale(.97);transition:transform .22s cubic-bezier(.16,1,.3,1);
-      max-height:90vh;display:flex;flex-direction:column;
-    }
+    .modal{background:var(--bg2);border:1px solid var(--border);border-radius:16px;width:100%;max-width:500px;box-shadow:var(--shadow-md);transform:translateY(16px) scale(.97);transition:transform .22s cubic-bezier(.16,1,.3,1);max-height:90vh;display:flex;flex-direction:column}
     .ovl.open .modal{transform:translateY(0) scale(1)}
-    .modal-wide{max-width:780px}
-
-    .m-head{
-      display:flex;align-items:center;justify-content:space-between;
-      padding:1.1rem 1.3rem;border-bottom:1px solid var(--border);flex-shrink:0;
-    }
+    .m-head{display:flex;align-items:center;justify-content:space-between;padding:1.1rem 1.3rem;border-bottom:1px solid var(--border);flex-shrink:0}
     .m-head-l{display:flex;align-items:center;gap:.6rem}
-    .m-head-icon{
-      width:32px;height:32px;border-radius:var(--radius-sm);
-      background:var(--accent-dim);border:1px solid var(--accent-mid);
-      display:flex;align-items:center;justify-content:center;color:var(--accent);
-    }
-    .m-title{font-family:var(--font-d);font-size:1rem;font-weight:700;color:var(--text);letter-spacing:-.01em}
+    .m-head-icon{width:32px;height:32px;border-radius:var(--radius-sm);background:var(--accent-dim);border:1px solid var(--accent-mid);display:flex;align-items:center;justify-content:center;color:var(--accent)}
+    .m-title{font-family:var(--font-d);font-size:1rem;font-weight:700;color:var(--text)}
     .m-sub{font-size:11px;color:var(--text3);margin-top:1px}
-    .m-close{
-      width:28px;height:28px;border-radius:var(--radius-sm);
-      border:1px solid var(--border);background:transparent;
-      color:var(--text2);display:flex;align-items:center;justify-content:center;
-      transition:all .12s;
-    }
+    .m-close{width:28px;height:28px;border-radius:var(--radius-sm);border:1px solid var(--border);background:transparent;color:var(--text2);display:flex;align-items:center;justify-content:center;transition:all .12s}
     .m-close:hover{border-color:var(--border2);color:var(--text);background:var(--bg3)}
-
     .m-body{padding:1.3rem;display:flex;flex-direction:column;gap:1rem;overflow-y:auto}
-
     .fld{display:flex;flex-direction:column;gap:.35rem}
-    .flbl{
-      font-size:11px;font-weight:600;letter-spacing:.06em;
-      text-transform:uppercase;color:var(--text3);
-      display:flex;align-items:center;gap:.35rem;
-    }
+    .flbl{font-size:11px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--text3);display:flex;align-items:center;gap:.35rem}
     .flbl-req{color:var(--accent);font-size:13px}
-    .fi,.fs,.fta{
-      background:var(--bg3);border:1px solid var(--border);
-      border-radius:var(--radius-sm);padding:.55rem .9rem;
-      font-size:13px;color:var(--text);outline:none;
-      transition:border-color .15s,background .15s,box-shadow .15s;
-      direction:rtl;width:100%;
-    }
+    .fi,.fs,.fta{background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius-sm);padding:.55rem .9rem;font-size:13px;color:var(--text);outline:none;transition:border-color .15s,box-shadow .15s;direction:rtl;width:100%}
     .fi:focus,.fs:focus,.fta:focus{border-color:var(--accent);background:var(--bg2);box-shadow:0 0 0 3px var(--accent-dim)}
     .fi::placeholder,.fta::placeholder{color:var(--text3)}
     .fta{resize:vertical;min-height:80px;line-height:1.6}
     .fs option{background:var(--bg2);color:var(--text)}
-    .fi-err{border-color:var(--red)!important;box-shadow:0 0 0 3px var(--red-dim)!important}
-    .err-msg{font-size:11px;color:var(--red)}
-
     .prev{border-radius:var(--radius-sm);overflow:hidden;position:relative;padding-bottom:56.25%;background:var(--bg3);display:none}
     .prev.show{display:block}
     .prev iframe{position:absolute;inset:0;width:100%;height:100%;border:none}
-
-    .fld-row{display:grid;grid-template-columns:1fr 1fr;gap:.8rem}
-
-    .color-grid{display:grid;grid-template-columns:repeat(9,1fr);gap:.35rem}
-    .color-swatch{
-      width:100%;aspect-ratio:1;border-radius:6px;border:2px solid transparent;
-      cursor:pointer;transition:transform .12s,border-color .12s;
-    }
+    .color-grid{display:grid;grid-template-columns:repeat(10,1fr);gap:.3rem}
+    .color-swatch{width:100%;aspect-ratio:1;border-radius:5px;border:2px solid transparent;cursor:pointer;transition:transform .12s,border-color .12s}
     .color-swatch:hover{transform:scale(1.15)}
     .color-swatch.sel{border-color:var(--text);transform:scale(1.15)}
-
-    .m-foot{
-      padding:.95rem 1.3rem;border-top:1px solid var(--border);
-      display:flex;justify-content:flex-end;gap:.5rem;flex-shrink:0;
-    }
-    .btn-sub{
-      padding:.55rem 1.3rem;
-      background:linear-gradient(135deg,var(--accent2),var(--accent));
-      color:#fff;border:none;border-radius:var(--radius-sm);
-      font-size:13px;font-weight:600;transition:opacity .15s,box-shadow .15s;
-      box-shadow:0 2px 10px var(--accent-glow);
-    }
-    .btn-sub:hover{opacity:.86;box-shadow:0 4px 18px var(--accent-glow)}
+    .m-foot{padding:.95rem 1.3rem;border-top:1px solid var(--border);display:flex;justify-content:flex-end;gap:.5rem;flex-shrink:0}
+    .btn-sub{padding:.55rem 1.3rem;background:linear-gradient(135deg,var(--accent2),var(--accent));color:#fff;border:none;border-radius:var(--radius-sm);font-size:13px;font-weight:600;transition:opacity .15s;box-shadow:0 2px 10px var(--accent-glow)}
+    .btn-sub:hover{opacity:.86}
     .btn-sub:disabled{opacity:.5;cursor:not-allowed}
-    .btn-cnl{
-      padding:.55rem 1rem;background:transparent;
-      border:1px solid var(--border);color:var(--text2);
-      border-radius:var(--radius-sm);font-size:13px;transition:all .12s;
-    }
+    .btn-cnl{padding:.55rem 1rem;background:transparent;border:1px solid var(--border);color:var(--text2);border-radius:var(--radius-sm);font-size:13px;transition:all .12s}
     .btn-cnl:hover{border-color:var(--border2);color:var(--text);background:var(--bg3)}
-    .btn-danger{
-      padding:.55rem 1rem;
-      background:var(--red-dim);border:1px solid var(--red);
-      color:var(--red);border-radius:var(--radius-sm);font-size:13px;font-weight:500;
-      transition:all .12s;
-    }
+    .btn-danger{padding:.55rem 1rem;background:var(--red-dim);border:1px solid var(--red);color:var(--red);border-radius:var(--radius-sm);font-size:13px;font-weight:500;transition:all .12s}
     .btn-danger:hover{background:var(--red);color:#fff}
 
-    /* ── Login modal special ── */
-    .login-wrap{
-      padding:2.5rem 2rem;
-      display:flex;flex-direction:column;align-items:center;
-      text-align:center;gap:1rem;
-    }
-    .login-logo-big{
-      width:56px;height:56px;border-radius:16px;
-      background:linear-gradient(135deg,var(--accent2),var(--accent));
-      display:flex;align-items:center;justify-content:center;
-      box-shadow:0 0 24px var(--accent-glow);margin-bottom:.3rem;
-    }
+    /* LOGIN */
+    .login-wrap{padding:2.5rem 2rem;display:flex;flex-direction:column;align-items:center;text-align:center;gap:1rem}
+    .login-logo-big{width:56px;height:56px;border-radius:16px;background:linear-gradient(135deg,var(--accent2),var(--accent));display:flex;align-items:center;justify-content:center;box-shadow:0 0 24px var(--accent-glow);margin-bottom:.3rem}
     .login-title{font-family:var(--font-d);font-size:1.5rem;font-weight:700;color:var(--text);letter-spacing:-.03em}
     .login-desc{font-size:13px;color:var(--text2);line-height:1.6;max-width:280px}
-    .g-btn{
-      display:flex;align-items:center;gap:.65rem;
-      padding:.65rem 1.4rem;
-      background:var(--bg3);border:1px solid var(--border);
-      border-radius:var(--radius-sm);font-size:13px;font-weight:500;color:var(--text);
-      transition:all .15s;margin-top:.3rem;
-    }
-    .g-btn:hover{border-color:var(--border2);background:var(--bg4);box-shadow:var(--shadow-sm)}
-    .login-features{
-      display:flex;flex-direction:column;gap:.4rem;
-      margin-top:.5rem;width:100%;
-    }
-    .login-feat{
-      display:flex;align-items:center;gap:.5rem;
-      font-size:12px;color:var(--text2);text-align:right;
-    }
+    .login-features{display:flex;flex-direction:column;gap:.4rem;margin-top:.5rem;width:100%}
+    .login-feat{display:flex;align-items:center;gap:.5rem;font-size:12px;color:var(--text2);text-align:right}
     .login-feat svg{color:var(--accent);flex-shrink:0}
 
-    /* ══ ADMIN PANEL ══ */
-    .admin-panel{
-      position:fixed;inset:0;z-index:600;
-      background:var(--bg);display:flex;flex-direction:column;
-      transform:translateX(100%);transition:transform .3s cubic-bezier(.16,1,.3,1);
-    }
+    /* CONFIRM */
+    .confirm-body{padding:1.5rem;display:flex;flex-direction:column;gap:.7rem}
+    .confirm-icon{width:48px;height:48px;border-radius:12px;background:var(--red-dim);border:1px solid var(--red);display:flex;align-items:center;justify-content:center;color:var(--red);margin-bottom:.3rem}
+    .confirm-title{font-family:var(--font-d);font-size:1.1rem;font-weight:700;color:var(--text)}
+    .confirm-msg{font-size:13px;color:var(--text2);line-height:1.6}
+
+    /* ADMIN */
+    .admin-panel{position:fixed;inset:0;z-index:600;background:var(--bg);display:flex;flex-direction:column;transform:translateX(100%);transition:transform .3s cubic-bezier(.16,1,.3,1)}
     .admin-panel.open{transform:translateX(0)}
-    .admin-hdr{
-      display:flex;align-items:center;gap:1rem;
-      padding:1rem 1.5rem;border-bottom:1px solid var(--border);
-      background:var(--bg2);
-    }
+    .admin-hdr{display:flex;align-items:center;gap:1rem;padding:1rem 1.5rem;border-bottom:1px solid var(--border);background:var(--bg2)}
     .admin-title{font-family:var(--font-d);font-size:1.1rem;font-weight:700;color:var(--text)}
     .admin-body{flex:1;overflow-y:auto;padding:1.5rem}
-    .admin-tabs{display:flex;gap:.3rem;margin-bottom:1.5rem;border-bottom:1px solid var(--border);padding-bottom:0}
-    .adm-tab{
-      padding:.5rem 1rem;font-size:13px;font-weight:500;color:var(--text2);
-      background:none;border:none;border-bottom:2px solid transparent;
-      transition:all .15s;margin-bottom:-1px;
-    }
+    .admin-tabs{display:flex;gap:.3rem;margin-bottom:1.5rem;border-bottom:1px solid var(--border)}
+    .adm-tab{padding:.5rem 1rem;font-size:13px;font-weight:500;color:var(--text2);background:none;border:none;border-bottom:2px solid transparent;transition:all .15s;margin-bottom:-1px}
     .adm-tab:hover{color:var(--text)}
     .adm-tab.on{color:var(--accent);border-bottom-color:var(--accent)}
-    .admin-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:1rem}
-    .admin-card{
-      background:var(--bg2);border:1px solid var(--border);
-      border-radius:var(--radius);padding:1rem;
-      display:flex;align-items:flex-start;gap:.8rem;
-    }
-    .admin-card-ico{
-      width:36px;height:36px;border-radius:var(--radius-sm);
-      display:flex;align-items:center;justify-content:center;flex-shrink:0;
-    }
+    .admin-stat-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;margin-bottom:1.5rem}
+    .admin-stat{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);padding:1rem 1.2rem}
+    .admin-stat-n{font-family:var(--font-d);font-size:1.8rem;font-weight:700;color:var(--text)}
+    .admin-stat-l{font-size:12px;color:var(--text3)}
+    .admin-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:1rem}
+    .admin-card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);padding:1rem;display:flex;align-items:flex-start;gap:.8rem}
+    .admin-card-ico{width:36px;height:36px;border-radius:var(--radius-sm);display:flex;align-items:center;justify-content:center;flex-shrink:0}
     .admin-card-body{flex:1;min-width:0}
     .admin-card-title{font-size:13px;font-weight:600;color:var(--text);margin-bottom:.2rem;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-    .admin-card-sub{font-size:11px;color:var(--text3);margin-bottom:.6rem;line-height:1.5}
-    .admin-card-acts{display:flex;gap:.35rem;flex-wrap:wrap}
-    .admin-card-btn{
-      padding:.3rem .7rem;border-radius:var(--radius-xs);
-      font-size:11px;font-weight:500;border:1px solid var(--border);
-      background:var(--bg3);color:var(--text2);transition:all .12s;
-    }
+    .admin-card-sub{font-size:11px;color:var(--text3);margin-bottom:.6rem}
+    .admin-card-acts{display:flex;gap:.35rem}
+    .admin-card-btn{padding:.3rem .7rem;border-radius:var(--radius-xs);font-size:11px;font-weight:500;border:1px solid var(--border);background:var(--bg3);color:var(--text2);transition:all .12s}
     .admin-card-btn:hover{border-color:var(--border2);color:var(--text);background:var(--bg4)}
     .admin-card-btn.danger{border-color:var(--red-dim);background:var(--red-dim);color:var(--red)}
     .admin-card-btn.danger:hover{background:var(--red);color:#fff;border-color:var(--red)}
-
-    .admin-stat-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;margin-bottom:1.5rem}
-    .admin-stat{
-      background:var(--bg2);border:1px solid var(--border);
-      border-radius:var(--radius);padding:1rem 1.2rem;
-    }
-    .admin-stat-n{font-family:var(--font-d);font-size:1.8rem;font-weight:700;color:var(--text)}
-    .admin-stat-l{font-size:12px;color:var(--text3);margin-top:.1rem}
-
     .tbl{width:100%;border-collapse:collapse}
     .tbl th{text-align:right;font-size:11px;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:.07em;padding:.6rem .8rem;border-bottom:1px solid var(--border)}
     .tbl td{padding:.7rem .8rem;font-size:13px;color:var(--text2);border-bottom:1px solid var(--border)}
     .tbl tr:last-child td{border-bottom:none}
     .tbl tr:hover td{background:var(--bg3);color:var(--text)}
 
-    /* ══ CONFIRM DIALOG ══ */
-    .confirm-body{padding:1.5rem;display:flex;flex-direction:column;gap:.7rem}
-    .confirm-icon{
-      width:48px;height:48px;border-radius:12px;
-      background:var(--red-dim);border:1px solid var(--red);
-      display:flex;align-items:center;justify-content:center;color:var(--red);
-      margin-bottom:.3rem;
-    }
-    .confirm-title{font-family:var(--font-d);font-size:1.1rem;font-weight:700;color:var(--text)}
-    .confirm-msg{font-size:13px;color:var(--text2);line-height:1.6}
-
-    /* ══ TOAST ══ */
+    /* TOAST */
     #toasts{position:fixed;bottom:1.5rem;right:50%;transform:translateX(50%);z-index:900;display:flex;flex-direction:column;gap:.4rem;align-items:center;pointer-events:none}
-    .toast{
-      background:var(--bg4);color:var(--text);
-      border:1px solid var(--border);
-      border-radius:100px;padding:.45rem 1.2rem;font-size:12px;white-space:nowrap;
-      box-shadow:var(--shadow-md);animation:toastIn .22s ease;
-      display:flex;align-items:center;gap:.5rem;
-    }
+    .toast{background:var(--bg4);color:var(--text);border:1px solid var(--border);border-radius:100px;padding:.45rem 1.2rem;font-size:12px;white-space:nowrap;box-shadow:var(--shadow-md);animation:toastIn .22s ease}
     .toast.err{background:var(--red);border-color:var(--red);color:#fff}
     .toast.ok{background:var(--green);border-color:var(--green);color:#fff}
     .toast.info{background:var(--bg2);border-color:var(--accent-mid)}
     @keyframes toastIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
 
-    /* ══ RESPONSIVE ══ */
-    @media(max-width:900px){
-      .sdb{display:none}
-      .main{border-right:none;padding-right:0}
-      .card{grid-template-columns:160px 1fr}
-      .skel{grid-template-columns:160px 1fr}
-      .admin-stat-grid{grid-template-columns:repeat(2,1fr)}
-    }
-    @media(max-width:600px){
-      .card{grid-template-columns:1fr}
-      .skel{grid-template-columns:1fr;height:auto}
-      .skel .sk-t{height:130px}
-      .c-thumb{order:-1}
-      .srch{max-width:160px}
-      .hdr{padding:0 1rem}
-      .layout{padding:0 1rem}
-      .fld-row{grid-template-columns:1fr}
-      .admin-stat-grid{grid-template-columns:repeat(2,1fr)}
-    }
+    /* RESPONSIVE */
+    @media(max-width:900px){.sdb{display:none}.main{border-right:none;padding-right:0}.card,.skel{grid-template-columns:160px 1fr}.admin-stat-grid{grid-template-columns:repeat(2,1fr)}}
+    @media(max-width:600px){.card,.skel{grid-template-columns:1fr}.skel{height:auto}.skel .sk-t{height:130px}.c-vid{order:-1}.srch{max-width:160px}.hdr,.layout{padding:0 1rem}.admin-stat-grid{grid-template-columns:repeat(2,1fr)}}
   </style>
 </head>
 <body>
 <div id="app" style="display:flex;flex-direction:column;min-height:100vh">
 
-  <!-- ════ HEADER ════ -->
-  <header class="hdr">
-    <a href="#" class="logo" onclick="return false">
-      <div class="logo-icon">
-        <svg width="16" height="16" viewBox="0 0 20 20" fill="none">
-          <rect x="1" y="1" width="18" height="18" rx="5" stroke="white" stroke-width="1.5"/>
-          <path d="M8 6.5l6 3.5-6 3.5V6.5z" fill="white"/>
-        </svg>
-      </div>
-      <div>
-        <div class="logo-w">TubeShare</div>
-      </div>
-    </a>
-
-    <div class="hdr-sep"></div>
-
-    <div class="srch">
-      <div class="srch-ico">
-        <svg width="13" height="13" viewBox="0 0 16 16" fill="none">
-          <circle cx="7" cy="7" r="5" stroke="currentColor" stroke-width="1.6"/>
-          <path d="M11 11L14 14" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
-        </svg>
-      </div>
-      <input id="s-inp" type="text" placeholder="חיפוש לפי כותרת, משתמש, תיאור..." />
-      <button class="srch-clear" id="srch-clear" onclick="clearSearch()">
-        <svg width="10" height="10" viewBox="0 0 12 12" fill="none"><path d="M1 1l10 10M11 1L1 11" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
-      </button>
-    </div>
-
-    <div class="hdr-right">
-      <button class="ico-btn" id="theme-btn" title="החלף מצב תצוגה">
-        <svg id="i-sun" width="14" height="14" viewBox="0 0 16 16" fill="none">
-          <circle cx="8" cy="8" r="3" stroke="currentColor" stroke-width="1.5"/>
-          <path d="M8 1v1.5M8 13.5V15M1 8h1.5M13.5 8H15M3.4 3.4l1 1M11.6 11.6l1 1M11.6 4.4l-1 1M4.4 11.6l-1 1" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>
-        </svg>
-        <svg id="i-moon" width="14" height="14" viewBox="0 0 16 16" fill="none" style="display:none">
-          <path d="M6 2.5a6 6 0 106 6 4 4 0 01-6-6z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-        </svg>
-      </button>
-
-      <!-- User chip (shown when logged in) -->
-      <div id="user-chip" class="user-chip" style="display:none" onclick="toggleDrop()">
-        <div class="user-ava" id="hdr-ava"><span id="hdr-ava-txt">?</span></div>
-        <span class="user-name" id="hdr-name">משתמש</span>
-        <svg width="10" height="10" viewBox="0 0 12 12" fill="none" style="color:var(--text3)">
-          <path d="M2 4l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-        </svg>
-        <div class="user-drop" id="user-drop">
-          <div class="drop-head" id="drop-email-lbl"></div>
-          <button class="drop-item" onclick="openModal('vm');closeDrop()">
-            <svg width="13" height="13" viewBox="0 0 14 14" fill="none"><path d="M7 1v12M1 7h12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
-            שתף סרטון חדש
-          </button>
-          <div class="drop-sep" id="admin-sep" style="display:none"></div>
-          <button class="drop-item" id="admin-btn" style="display:none" onclick="openAdmin();closeDrop()">
-            <svg width="13" height="13" viewBox="0 0 14 14" fill="none"><rect x="1" y="1" width="12" height="12" rx="3" stroke="currentColor" stroke-width="1.3"/><path d="M4 7h6M4 9.5h4" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
-            <span class="admin-crown">👑</span> פאנל ניהול
-          </button>
-          <div class="drop-sep"></div>
-          <button class="drop-item danger" onclick="logout()">
-            <svg width="13" height="13" viewBox="0 0 14 14" fill="none"><path d="M9 5V3a2 2 0 00-2-2H3a2 2 0 00-2 2v8a2 2 0 002 2h4a2 2 0 002-2v-2M12 7H5M10 5l3 2-3 2" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>
-            יציאה
-          </button>
-        </div>
-      </div>
-
-      <!-- Login button (shown when logged out) -->
-      <button class="btn-primary" id="login-btn" onclick="openModal('lm')">
-        <svg width="13" height="13" viewBox="0 0 14 14" fill="none"><circle cx="7" cy="5" r="3" stroke="currentColor" stroke-width="1.4"/><path d="M1 13c0-3.3 2.7-6 6-6s6 2.7 6 6" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
-        כניסה
-      </button>
-
-      <button class="btn-primary" id="share-btn" style="display:none" onclick="openModal('vm')">
-        <svg width="11" height="11" viewBox="0 0 12 12" fill="none"><path d="M6 1v10M1 6h10" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
-        שתף סרטון
-      </button>
-    </div>
-  </header>
-
-  <!-- ════ BODY ════ -->
-  <div class="layout" style="flex:1">
-
-    <!-- ════ SIDEBAR ════ -->
-    <aside class="sdb">
-      <div class="sdb-sec">
-        <div class="sdb-lbl">נושאים</div>
-        <button class="t-item on" data-topic="all" onclick="fTopic('all',this)">
-          <span class="t-inner">
-            <svg width="11" height="11" viewBox="0 0 12 12" fill="none">
-              <rect x="1" y="1" width="4" height="4" rx="1.2" stroke="currentColor" stroke-width="1.3"/>
-              <rect x="7" y="1" width="4" height="4" rx="1.2" stroke="currentColor" stroke-width="1.3"/>
-              <rect x="1" y="7" width="4" height="4" rx="1.2" stroke="currentColor" stroke-width="1.3"/>
-              <rect x="7" y="7" width="4" height="4" rx="1.2" stroke="currentColor" stroke-width="1.3"/>
-            </svg>
-            <span class="t-lbl">כל הסרטונים</span>
-          </span>
-          <span class="t-cnt" id="cnt-all">—</span>
-        </button>
-        <div id="t-list"></div>
-      </div>
-
-      <div class="sdb-div"></div>
-
-      <button class="add-t-btn" id="add-topic-btn" style="display:none" onclick="openModal('tm')">
-        <svg width="11" height="11" viewBox="0 0 12 12" fill="none">
-          <path d="M6 1v10M1 6h10" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
-        </svg>
-        נושא חדש
-      </button>
-
-      <div class="sdb-div" style="margin-top:1.5rem"></div>
-
-      <div class="sdb-lbl">סטטיסטיקות</div>
-      <div class="stats-box">
-        <div class="stat-item">
-          <div class="stat-n" id="st-vids">—</div>
-          <div class="stat-l">סרטונים</div>
-        </div>
-        <div class="stat-item">
-          <div class="stat-n" id="st-topics">—</div>
-          <div class="stat-l">נושאים</div>
-        </div>
-        <div class="stat-item">
-          <div class="stat-n" id="st-likes">—</div>
-          <div class="stat-l">לייקים</div>
-        </div>
-        <div class="stat-item">
-          <div class="stat-n" id="st-users">—</div>
-          <div class="stat-l">משתמשים</div>
-        </div>
-      </div>
-    </aside>
-
-    <!-- ════ MAIN ════ -->
-    <main class="main">
-      <div class="feed-hdr">
-        <div class="feed-hdr-l">
-          <h1 class="feed-title" id="f-title">כל הסרטונים</h1>
-          <div class="feed-sub" id="sync-lbl">טוען...</div>
-        </div>
-        <div class="feed-hdr-r">
-          <button class="sort-btn on" id="sort-new" onclick="setSort('new',this)">
-            <svg width="11" height="11" viewBox="0 0 12 12" fill="none"><circle cx="6" cy="6" r="4.5" stroke="currentColor" stroke-width="1.3"/><path d="M6 3.5v2.5l1.5 1" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>
-            חדש
-          </button>
-          <button class="sort-btn" id="sort-hot" onclick="setSort('hot',this)">
-            <svg width="11" height="11" viewBox="0 0 12 12" fill="none"><path d="M6 1C6 1 9 3.5 9 6.5a3 3 0 01-6 0C3 4.5 4 3 4 3S4.5 5 6 5c0-2 0-4 0-4z" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/></svg>
-            פופולרי
-          </button>
-        </div>
-      </div>
-
-      <div class="feed" id="feed">
-        <!-- skeletons -->
-        <div class="skel"><div class="sk-t"></div><div class="sk-b"><div class="sk-l w30"></div><div class="sk-l w65"></div><div class="sk-l w45"></div><div class="sk-l w80"></div></div></div>
-        <div class="skel"><div class="sk-t"></div><div class="sk-b"><div class="sk-l w30"></div><div class="sk-l w65"></div><div class="sk-l w45"></div><div class="sk-l w80"></div></div></div>
-        <div class="skel"><div class="sk-t"></div><div class="sk-b"><div class="sk-l w30"></div><div class="sk-l w65"></div><div class="sk-l w45"></div><div class="sk-l w80"></div></div></div>
-      </div>
-    </main>
+<!-- HEADER -->
+<header class="hdr">
+  <div class="logo">
+    <div class="logo-icon"><svg width="16" height="16" viewBox="0 0 20 20" fill="none"><rect x="1" y="1" width="18" height="18" rx="5" stroke="white" stroke-width="1.5"/><path d="M8 6.5l6 3.5-6 3.5V6.5z" fill="white"/></svg></div>
+    <div class="logo-w">TubeShare</div>
   </div>
-</div>
+  <div class="hdr-sep"></div>
+  <div class="srch">
+    <div class="srch-ico"><svg width="13" height="13" viewBox="0 0 16 16" fill="none"><circle cx="7" cy="7" r="5" stroke="currentColor" stroke-width="1.6"/><path d="M11 11L14 14" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg></div>
+    <input id="s-inp" type="text" placeholder="חיפוש..." />
+    <button class="srch-clear" id="srch-clear" onclick="clearSearch()"><svg width="10" height="10" viewBox="0 0 12 12" fill="none"><path d="M1 1l10 10M11 1L1 11" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg></button>
+  </div>
+  <div class="hdr-right">
+    <button class="ico-btn" id="theme-btn">
+      <svg id="i-sun" width="14" height="14" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="3" stroke="currentColor" stroke-width="1.5"/><path d="M8 1v1.5M8 13.5V15M1 8h1.5M13.5 8H15M3.4 3.4l1 1M11.6 11.6l1 1M11.6 4.4l-1 1M4.4 11.6l-1 1" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
+      <svg id="i-moon" width="14" height="14" viewBox="0 0 16 16" fill="none" style="display:none"><path d="M6 2.5a6 6 0 106 6 4 4 0 01-6-6z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </button>
+    <div id="user-chip" class="user-chip" style="display:none" onclick="toggleDrop()">
+      <div class="user-ava" id="hdr-ava"></div>
+      <span class="user-name" id="hdr-name">משתמש</span>
+      <svg width="10" height="10" viewBox="0 0 12 12" fill="none" style="color:var(--text3)"><path d="M2 4l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      <div class="user-drop" id="user-drop">
+        <div class="drop-head" id="drop-email-lbl"></div>
+        <button class="drop-item" onclick="openModal('vm');closeDrop()"><svg width="13" height="13" viewBox="0 0 14 14" fill="none"><path d="M7 1v12M1 7h12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>שתף סרטון</button>
+        <div class="drop-sep" id="admin-sep" style="display:none"></div>
+        <button class="drop-item" id="admin-btn" style="display:none" onclick="openAdmin();closeDrop()"><svg width="13" height="13" viewBox="0 0 14 14" fill="none"><rect x="1" y="1" width="12" height="12" rx="3" stroke="currentColor" stroke-width="1.3"/><path d="M4 7h6M4 9.5h4" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg><span style="color:var(--gold)">👑</span> פאנל ניהול</button>
+        <div class="drop-sep"></div>
+        <button class="drop-item danger" onclick="logout()"><svg width="13" height="13" viewBox="0 0 14 14" fill="none"><path d="M9 5V3a2 2 0 00-2-2H3a2 2 0 00-2 2v8a2 2 0 002 2h4a2 2 0 002-2v-2M12 7H5M10 5l3 2-3 2" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>יציאה</button>
+      </div>
+    </div>
+    <button class="btn-primary" id="login-btn" onclick="openModal('lm')"><svg width="13" height="13" viewBox="0 0 14 14" fill="none"><circle cx="7" cy="5" r="3" stroke="currentColor" stroke-width="1.4"/><path d="M1 13c0-3.3 2.7-6 6-6s6 2.7 6 6" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>כניסה</button>
+    <button class="btn-primary" id="share-btn" style="display:none" onclick="openModal('vm')"><svg width="11" height="11" viewBox="0 0 12 12" fill="none"><path d="M6 1v10M1 6h10" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>שתף סרטון</button>
+  </div>
+</header>
 
-<!-- ════════════ MODALS ════════════ -->
+<!-- BODY -->
+<div class="layout" style="flex:1">
+  <aside class="sdb">
+    <div class="sdb-sec">
+      <div class="sdb-lbl">נושאים</div>
+      <button class="t-item on" data-topic="all" onclick="fTopic('all',this)">
+        <span class="t-inner"><svg width="11" height="11" viewBox="0 0 12 12" fill="none"><rect x="1" y="1" width="4" height="4" rx="1.2" stroke="currentColor" stroke-width="1.3"/><rect x="7" y="1" width="4" height="4" rx="1.2" stroke="currentColor" stroke-width="1.3"/><rect x="1" y="7" width="4" height="4" rx="1.2" stroke="currentColor" stroke-width="1.3"/><rect x="7" y="7" width="4" height="4" rx="1.2" stroke="currentColor" stroke-width="1.3"/></svg><span class="t-lbl">כל הסרטונים</span></span>
+        <span class="t-cnt" id="cnt-all">—</span>
+      </button>
+      <div id="t-list"></div>
+    </div>
+    <div class="sdb-div"></div>
+    <button class="add-t-btn" id="add-topic-btn" style="display:none" onclick="openModal('tm')"><svg width="11" height="11" viewBox="0 0 12 12" fill="none"><path d="M6 1v10M1 6h10" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>נושא חדש</button>
+    <div class="sdb-div" style="margin-top:1.5rem"></div>
+    <div class="sdb-lbl">סטטיסטיקות</div>
+    <div class="stats-box">
+      <div class="stat-item"><div class="stat-n" id="st-vids">—</div><div class="stat-l">סרטונים</div></div>
+      <div class="stat-item"><div class="stat-n" id="st-topics">—</div><div class="stat-l">נושאים</div></div>
+      <div class="stat-item"><div class="stat-n" id="st-likes">—</div><div class="stat-l">לייקים</div></div>
+      <div class="stat-item"><div class="stat-n" id="st-users">—</div><div class="stat-l">משתמשים</div></div>
+    </div>
+  </aside>
+  <main class="main">
+    <div class="feed-hdr">
+      <div class="feed-hdr-l"><h1 class="feed-title" id="f-title">כל הסרטונים</h1><div class="feed-sub" id="sync-lbl">טוען...</div></div>
+      <div class="feed-hdr-r">
+        <button class="sort-btn on" id="sort-new" onclick="setSort('new',this)"><svg width="11" height="11" viewBox="0 0 12 12" fill="none"><circle cx="6" cy="6" r="4.5" stroke="currentColor" stroke-width="1.3"/><path d="M6 3.5v2.5l1.5 1" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>חדש</button>
+        <button class="sort-btn" id="sort-hot" onclick="setSort('hot',this)"><svg width="11" height="11" viewBox="0 0 12 12" fill="none"><path d="M6 1C6 1 9 3.5 9 6.5a3 3 0 01-6 0C3 4.5 4 3 4 3S4.5 5 6 5c0-2 0-4 0-4z" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/></svg>פופולרי</button>
+      </div>
+    </div>
+    <div class="feed" id="feed">
+      <div class="skel"><div class="sk-t"></div><div class="sk-b"><div class="sk-l w30"></div><div class="sk-l w65"></div><div class="sk-l w45"></div><div class="sk-l w80"></div></div></div>
+      <div class="skel"><div class="sk-t"></div><div class="sk-b"><div class="sk-l w30"></div><div class="sk-l w65"></div><div class="sk-l w45"></div><div class="sk-l w80"></div></div></div>
+      <div class="skel"><div class="sk-t"></div><div class="sk-b"><div class="sk-l w30"></div><div class="sk-l w65"></div><div class="sk-l w45"></div><div class="sk-l w80"></div></div></div>
+    </div>
+  </main>
+</div>
+</div>
 
 <!-- LOGIN MODAL -->
 <div class="ovl" id="lm">
   <div class="modal" style="max-width:420px">
-    <div class="m-head">
-      <div class="m-head-l">
-        <div class="m-head-icon">
-          <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><circle cx="7" cy="5" r="3" stroke="currentColor" stroke-width="1.4"/><path d="M1 13c0-3.3 2.7-6 6-6s6 2.7 6 6" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
-        </div>
-        <div>
-          <div class="m-title">כניסה לקהילה</div>
-          <div class="m-sub">השתמש בחשבון Google שלך</div>
-        </div>
-      </div>
-      <button class="m-close" onclick="closeModal('lm')">
-        <svg width="10" height="10" viewBox="0 0 12 12" fill="none"><path d="M1 1l10 10M11 1L1 11" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
-      </button>
-    </div>
+    <div class="m-head"><div class="m-head-l"><div class="m-head-icon"><svg width="14" height="14" viewBox="0 0 14 14" fill="none"><circle cx="7" cy="5" r="3" stroke="currentColor" stroke-width="1.4"/><path d="M1 13c0-3.3 2.7-6 6-6s6 2.7 6 6" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg></div><div><div class="m-title">כניסה לקהילה</div><div class="m-sub">השתמש בחשבון Google שלך</div></div></div><button class="m-close" onclick="closeModal('lm')"><svg width="10" height="10" viewBox="0 0 12 12" fill="none"><path d="M1 1l10 10M11 1L1 11" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg></button></div>
     <div class="login-wrap">
-      <div class="login-logo-big">
-        <svg width="26" height="26" viewBox="0 0 20 20" fill="none">
-          <rect x="1" y="1" width="18" height="18" rx="5" stroke="white" stroke-width="1.5"/>
-          <path d="M8 6.5l6 3.5-6 3.5V6.5z" fill="white"/>
-        </svg>
-      </div>
+      <div class="login-logo-big"><svg width="26" height="26" viewBox="0 0 20 20" fill="none"><rect x="1" y="1" width="18" height="18" rx="5" stroke="white" stroke-width="1.5"/><path d="M8 6.5l6 3.5-6 3.5V6.5z" fill="white"/></svg></div>
       <div class="login-title">ברוך הבא ל-TubeShare</div>
-      <div class="login-desc">קהילה ישראלית לשיתוף סרטוני יוטיוב מרתקים. הצטרף עכשיו חינם.</div>
-
-      <!-- Google Sign-In Button injected here -->
+      <div class="login-desc">קהילה ישראלית לשיתוף סרטוני יוטיוב. הצטרף חינם.</div>
       <div id="g-signin-login" style="margin:.3rem 0"></div>
-
       <div class="login-features">
-        <div class="login-feat">
-          <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M2 7l4 4 6-6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-          שיתוף סרטונים מיוטיוב בקלות
-        </div>
-        <div class="login-feat">
-          <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M2 7l4 4 6-6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-          ארגון לפי נושאים ותגיות
-        </div>
-        <div class="login-feat">
-          <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M2 7l4 4 6-6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-          לייקים ואינטראקציה עם הקהילה
-        </div>
+        <div class="login-feat"><svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M2 7l4 4 6-6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>שיתוף סרטונים</div>
+        <div class="login-feat"><svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M2 7l4 4 6-6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>תגובות ולייקים</div>
+        <div class="login-feat"><svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M2 7l4 4 6-6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>ארגון לפי נושאים</div>
       </div>
     </div>
   </div>
@@ -943,82 +374,26 @@
 <!-- VIDEO MODAL -->
 <div class="ovl" id="vm">
   <div class="modal">
-    <div class="m-head">
-      <div class="m-head-l">
-        <div class="m-head-icon">
-          <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><rect x="1" y="2" width="12" height="10" rx="3" stroke="currentColor" stroke-width="1.3"/><path d="M5.5 5l4 2-4 2V5z" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/></svg>
-        </div>
-        <div>
-          <div class="m-title">שיתוף סרטון חדש</div>
-          <div class="m-sub">הוסף סרטון מיוטיוב לקהילה</div>
-        </div>
-      </div>
-      <button class="m-close" onclick="closeModal('vm')">
-        <svg width="10" height="10" viewBox="0 0 12 12" fill="none"><path d="M1 1l10 10M11 1L1 11" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
-      </button>
-    </div>
+    <div class="m-head"><div class="m-head-l"><div class="m-head-icon"><svg width="14" height="14" viewBox="0 0 14 14" fill="none"><rect x="1" y="2" width="12" height="10" rx="3" stroke="currentColor" stroke-width="1.3"/><path d="M5.5 5l4 2-4 2V5z" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/></svg></div><div><div class="m-title">שיתוף סרטון חדש</div><div class="m-sub">הוסף סרטון מיוטיוב לקהילה</div></div></div><button class="m-close" onclick="closeModal('vm')"><svg width="10" height="10" viewBox="0 0 12 12" fill="none"><path d="M1 1l10 10M11 1L1 11" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg></button></div>
     <div class="m-body">
-      <div class="fld">
-        <label class="flbl">קישור יוטיוב <span class="flbl-req">*</span></label>
-        <input id="v-url" class="fi" type="url" placeholder="https://youtube.com/watch?v=..." oninput="onUrl(this.value)" />
-        <div class="prev" id="v-prev"><iframe id="v-fr" allowfullscreen></iframe></div>
-      </div>
-      <div class="fld">
-        <label class="flbl">כותרת <span class="flbl-req">*</span></label>
-        <input id="v-ttl" class="fi" placeholder="מה שם הסרטון?" maxlength="120" />
-      </div>
-      <div class="fld">
-        <label class="flbl">תיאור קצר</label>
-        <textarea id="v-dsc" class="fta" placeholder="למה כדאי לצפות בסרטון הזה?" maxlength="300"></textarea>
-      </div>
-      <div class="fld">
-        <label class="flbl">נושא <span class="flbl-req">*</span></label>
-        <select id="v-tp" class="fs">
-          <option value="">בחר נושא...</option>
-        </select>
-      </div>
+      <div class="fld"><label class="flbl">קישור יוטיוב <span class="flbl-req">*</span></label><input id="v-url" class="fi" type="url" placeholder="https://youtube.com/watch?v=..." oninput="onUrl(this.value)" /><div class="prev" id="v-prev"><iframe id="v-fr" allowfullscreen></iframe></div></div>
+      <div class="fld"><label class="flbl">כותרת <span class="flbl-req">*</span></label><input id="v-ttl" class="fi" placeholder="מה שם הסרטון?" maxlength="120" /></div>
+      <div class="fld"><label class="flbl">תיאור קצר</label><textarea id="v-dsc" class="fta" placeholder="למה כדאי לצפות?" maxlength="300"></textarea></div>
+      <div class="fld"><label class="flbl">נושא <span class="flbl-req">*</span></label><select id="v-tp" class="fs"><option value="">בחר נושא...</option></select></div>
     </div>
-    <div class="m-foot">
-      <button class="btn-cnl" onclick="closeModal('vm')">ביטול</button>
-      <button class="btn-sub" onclick="subVideo()" id="sub-vid-btn">
-        <span id="sub-vid-txt">פרסם סרטון</span>
-      </button>
-    </div>
+    <div class="m-foot"><button class="btn-cnl" onclick="closeModal('vm')">ביטול</button><button class="btn-sub" onclick="subVideo()" id="sub-vid-btn"><span id="sub-vid-txt">פרסם סרטון</span></button></div>
   </div>
 </div>
 
 <!-- TOPIC MODAL -->
 <div class="ovl" id="tm">
   <div class="modal" style="max-width:420px">
-    <div class="m-head">
-      <div class="m-head-l">
-        <div class="m-head-icon">
-          <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M7 1v12M1 7h12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
-        </div>
-        <div>
-          <div class="m-title">נושא חדש</div>
-          <div class="m-sub">הוסף קטגוריה חדשה</div>
-        </div>
-      </div>
-      <button class="m-close" onclick="closeModal('tm')">
-        <svg width="10" height="10" viewBox="0 0 12 12" fill="none"><path d="M1 1l10 10M11 1L1 11" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
-      </button>
-    </div>
+    <div class="m-head"><div class="m-head-l"><div class="m-head-icon"><svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M7 1v12M1 7h12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></div><div><div class="m-title">נושא חדש</div></div></div><button class="m-close" onclick="closeModal('tm')"><svg width="10" height="10" viewBox="0 0 12 12" fill="none"><path d="M1 1l10 10M11 1L1 11" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg></button></div>
     <div class="m-body">
-      <div class="fld">
-        <label class="flbl">שם הנושא <span class="flbl-req">*</span></label>
-        <input id="t-nm" class="fi" placeholder="מדע, כלכלה, קומדיה, ספורט..." maxlength="40" />
-      </div>
-      <div class="fld">
-        <label class="flbl">צבע</label>
-        <div class="color-grid" id="clr-grid"></div>
-        <input type="hidden" id="t-clr" value="#A855F7" />
-      </div>
+      <div class="fld"><label class="flbl">שם הנושא <span class="flbl-req">*</span></label><input id="t-nm" class="fi" placeholder="מדע, כלכלה, קומדיה..." maxlength="40" /></div>
+      <div class="fld"><label class="flbl">צבע</label><div class="color-grid" id="clr-grid"></div><input type="hidden" id="t-clr" value="#A855F7" /></div>
     </div>
-    <div class="m-foot">
-      <button class="btn-cnl" onclick="closeModal('tm')">ביטול</button>
-      <button class="btn-sub" onclick="subTopic()">הוסף נושא</button>
-    </div>
+    <div class="m-foot"><button class="btn-cnl" onclick="closeModal('tm')">ביטול</button><button class="btn-sub" onclick="subTopic()">הוסף נושא</button></div>
   </div>
 </div>
 
@@ -1026,839 +401,416 @@
 <div class="ovl" id="cm">
   <div class="modal" style="max-width:380px">
     <div class="confirm-body">
-      <div class="confirm-icon">
-        <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M12 9v4M12 17h.01M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
-      </div>
+      <div class="confirm-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M12 9v4M12 17h.01M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
       <div class="confirm-title" id="cf-title">אתה בטוח?</div>
       <div class="confirm-msg" id="cf-msg">פעולה זו אינה ניתנת לביטול.</div>
     </div>
-    <div class="m-foot">
-      <button class="btn-cnl" onclick="closeModal('cm')">ביטול</button>
-      <button class="btn-danger" id="cf-ok">מחק</button>
-    </div>
+    <div class="m-foot"><button class="btn-cnl" onclick="closeModal('cm')">ביטול</button><button class="btn-danger" id="cf-ok">מחק</button></div>
   </div>
 </div>
 
-<!-- VIDEO LIGHTBOX -->
-<div class="vl-ovl" id="vl">
-  <button class="vl-close" onclick="closeVideo()">
-    <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M1 1l10 10M11 1L1 11" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
-  </button>
-  <div class="vl-wrap">
-    <div class="vl-video">
-      <iframe id="vl-fr" allowfullscreen allow="accelerometer;autoplay;clipboard-write;encrypted-media;gyroscope;picture-in-picture"></iframe>
-    </div>
-    <div class="vl-info">
-      <div class="vl-info-l">
-        <span class="vl-cat" id="vl-cat"></span>
-        <div class="vl-title" id="vl-title"></div>
-        <div class="vl-desc" id="vl-desc"></div>
-        <div class="vl-author">
-          <div class="ava" id="vl-ava"></div>
-          <span id="vl-by"></span>
-          <span id="vl-time"></span>
-        </div>
-      </div>
-      <div class="vl-info-r">
-        <button class="act-btn" id="vl-like-btn" onclick="vlLike()">
-          <svg width="14" height="14" viewBox="0 0 14 13" fill="none" id="vl-heart">
-            <path d="M7 12S1 8.2 1 4.5C1 2.6 2.6 1 4.5 1c.9 0 1.8.38 2.5 1 .7-.62 1.6-1 2.5-1C11.4 1 13 2.6 13 4.5 13 8.2 7 12 7 12z" stroke="currentColor" stroke-width="1.25"/>
-          </svg>
-          <span id="vl-likes">0</span>
-        </button>
-        <a id="vl-yt-link" href="#" target="_blank" rel="noopener" class="act-btn" title="פתח ביוטיוב">
-          <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><rect x="1" y="1" width="14" height="14" rx="4" stroke="currentColor" stroke-width="1.3"/><path d="M6 5l5 3-5 3V5z" fill="currentColor"/></svg>
-          יוטיוב
-        </a>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- TOAST container -->
 <div id="toasts"></div>
 
-<!-- ════ ADMIN PANEL ════ -->
+<!-- ADMIN -->
 <div class="admin-panel" id="admin-panel">
   <div class="admin-hdr">
-    <button class="m-close" onclick="closeAdmin()" style="margin-left:auto">
-      <svg width="12" height="12" viewBox="0 0 14 14" fill="none"><path d="M1 1l12 12M13 1L1 13" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg>
-    </button>
+    <button class="m-close" onclick="closeAdmin()" style="margin-left:auto"><svg width="12" height="12" viewBox="0 0 14 14" fill="none"><path d="M1 1l12 12M13 1L1 13" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg></button>
     <div class="admin-title">👑 פאנל ניהול</div>
     <div style="font-size:12px;color:var(--text3);margin-right:.5rem">dhoc97909@gmail.com</div>
   </div>
   <div class="admin-body">
     <div class="admin-stat-grid" id="adm-stats"></div>
-    <div class="admin-tabs">
-      <button class="adm-tab on" onclick="admTab('videos',this)">סרטונים</button>
-      <button class="adm-tab" onclick="admTab('topics',this)">נושאים</button>
-      <button class="adm-tab" onclick="admTab('users',this)">משתמשים</button>
-    </div>
+    <div class="admin-tabs"><button class="adm-tab on" onclick="admTab('videos',this)">סרטונים</button><button class="adm-tab" onclick="admTab('topics',this)">נושאים</button><button class="adm-tab" onclick="admTab('users',this)">משתמשים</button></div>
     <div id="adm-content"></div>
   </div>
 </div>
 
 <script>
-/* ═══════════════════════════════════════════════
-   CONFIGURATION
-═══════════════════════════════════════════════ */
-const API       = "https://script.google.com/macros/s/AKfycbw0t0lTm5NAFbBiN4Lo5UA8LU0MpInDgLpa0wzC2OZECs_tHvvZC8RgeWZj-xoPz6YT/exec";
+const API = "https://script.google.com/macros/s/AKfycbw0t0lTm5NAFbBiN4Lo5UA8LU0MpInDgLpa0wzC2OZECs_tHvvZC8RgeWZj-xoPz6YT/exec";
 const ADMIN_EMAIL = "dhoc97909@gmail.com";
 const GOOGLE_CLIENT_ID = "856723702772-jm929ihp29ovhribfaaph17pbaq6qr3n.apps.googleusercontent.com";
+const POLL_MS = 20000;
 
-/* ═══════════════════════════════════════════════
-   STATE
-═══════════════════════════════════════════════ */
-let cur       = "all";
-let srch      = "";
-let sortMode  = "new";
-let topics    = [];
-let allVids   = [];
-let vcounts   = {};
-let totalLikes= 0;
-let uniqueUsers = new Set();
-let liked     = JSON.parse(localStorage.getItem("ts_lk") || "[]");
-let user      = null; // {name, email, picture, isAdmin}
+let cur="all", srch="", sortMode="new";
+let topics=[], allVids=[], vcounts={}, totalLikes=0, uniqueUsers=new Set();
+let liked = JSON.parse(localStorage.getItem("ts_lk")||"[]");
+let user = null;
+let pollTimer = null;
+let commentsCache = {};
 
-const COLORS = [
-  "#A855F7","#3B82F6","#10B981","#F59E0B","#EF4444",
-  "#EC4899","#06B6D4","#84CC16","#F97316","#6366F1",
-  "#14B8A6","#E879F9","#FB923C","#34D399","#60A5FA",
-  "#FACC15","#F87171","#A78BFA","#2DD4BF","#FCD34D"
-];
-const cmap = {};
+const COLORS=["#A855F7","#3B82F6","#10B981","#F59E0B","#EF4444","#EC4899","#06B6D4","#84CC16","#F97316","#6366F1","#14B8A6","#E879F9","#FB923C","#34D399","#60A5FA","#FACC15","#F87171","#A78BFA","#2DD4BF","#FCD34D"];
+const cmap={};
 function tclr(n){if(!cmap[n]){const k=Object.keys(cmap);cmap[n]=COLORS[k.length%COLORS.length];}return cmap[n];}
 
-/* ═══════════════════════════════════════════════
-   INIT
-═══════════════════════════════════════════════ */
-document.addEventListener("DOMContentLoaded", () => {
-  // Theme
-  const th = localStorage.getItem("ts_th") || "dark";
-  setTheme(th);
-  document.getElementById("theme-btn").addEventListener("click", () => {
-    const c = document.documentElement.getAttribute("data-theme");
-    setTheme(c === "dark" ? "light" : "dark");
-  });
-
-  // Search
+/* INIT */
+document.addEventListener("DOMContentLoaded",()=>{
+  const th=localStorage.getItem("ts_th")||"dark"; setTheme(th);
+  document.getElementById("theme-btn").addEventListener("click",()=>{setTheme(document.documentElement.getAttribute("data-theme")==="dark"?"light":"dark");});
   let st;
-  document.getElementById("s-inp").addEventListener("input", e => {
-    clearTimeout(st);
-    const v = e.target.value;
-    document.getElementById("srch-clear").style.display = v ? "" : "none";
-    st = setTimeout(() => { srch = v; renderVids(filterVids()); }, 350);
+  document.getElementById("s-inp").addEventListener("input",e=>{
+    clearTimeout(st);const v=e.target.value;
+    document.getElementById("srch-clear").style.display=v?"":"none";
+    st=setTimeout(()=>{srch=v;renderVids(filterVids());},350);
   });
-
-  // Close lightbox on outside click or ESC
-  document.getElementById("vl").addEventListener("click", e => {
-    if (e.target === document.getElementById("vl")) closeVideo();
-  });
-  document.addEventListener("keydown", e => {
-    if (e.key === "Escape") {
-      if (document.getElementById("vl").classList.contains("open")) closeVideo();
-    }
-  });
-
-  // Close dropdowns on outside click
-  document.addEventListener("click", e => {
-    if (!e.target.closest("#user-chip")) closeDrop();
-    if (!e.target.closest(".ovl")) {/* handled by ovl click */}
-  });
-
-  // Overlays close on bg click
-  document.querySelectorAll(".ovl").forEach(el => {
-    el.addEventListener("click", e => { if (e.target === el) closeModal(el.id); });
-  });
-
-  // Color grid for topics
+  document.addEventListener("click",e=>{if(!e.target.closest("#user-chip"))closeDrop();});
+  document.querySelectorAll(".ovl").forEach(el=>el.addEventListener("click",e=>{if(e.target===el)closeModal(el.id);}));
+  document.addEventListener("keydown",e=>{if(e.key==="Escape")document.querySelectorAll(".ovl.open").forEach(el=>closeModal(el.id));});
   buildColorGrid();
-
-  // Try restore session
-  const saved = localStorage.getItem("ts_user");
-  if (saved) {
-    try { user = JSON.parse(saved); setUserUI(); } catch { user = null; }
-  }
-
-  // Load data
-  loadTopics().then(() => loadVids());
-
-  // Init Google Sign-In
+  const saved=localStorage.getItem("ts_user");
+  if(saved){try{user=JSON.parse(saved);setUserUI();}catch{user=null;}}
+  loadTopics().then(()=>loadVids(true));
+  startPolling();
   initGoogle();
 });
 
-/* ═══════════════════════════════════════════════
-   GOOGLE AUTH
-═══════════════════════════════════════════════ */
-function initGoogle() {
-  if (typeof google === "undefined") {
-    setTimeout(initGoogle, 300); return;
+/* POLLING */
+function startPolling(){
+  if(pollTimer)clearInterval(pollTimer);
+  pollTimer=setInterval(silentRefresh, POLL_MS);
+}
+async function silentRefresh(){
+  try{
+    const[tr,vr]=await Promise.all([fetch(`${API}?action=getTopics`),fetch(`${API}?action=getVideos`)]);
+    const[td,vd]=await Promise.all([tr.json(),vr.json()]);
+    if(td.success){topics=td.topics;renderTopics();}
+    if(vd.success)mergeVids(vd.videos);
+  }catch{}
+}
+function mergeVids(newVids){
+  let needFull=newVids.length!==allVids.length;
+  const newMap={};
+  newVids.forEach(v=>newMap[v.id]=v);
+  const changedIds=[];
+  if(!needFull){
+    newVids.forEach(v=>{
+      const old=allVids.find(x=>x.id===v.id);
+      if(!old){needFull=true;return;}
+      if(old.likes!==v.likes||old.comments!==v.comments||old.views!==v.views)changedIds.push(v.id);
+    });
   }
-  google.accounts.id.initialize({
-    client_id: GOOGLE_CLIENT_ID,
-    callback: handleGoogleCb,
-    auto_select: false,
-    cancel_on_tap_outside: false,
-  });
-  google.accounts.id.renderButton(
-    document.getElementById("g-signin-login"),
-    { theme: "filled_black", size: "large", text: "continue_with", locale: "he", width: 280 }
-  );
+  allVids=newVids;
+  vcounts={};totalLikes=0;uniqueUsers.clear();
+  newVids.forEach(v=>{vcounts[v.topic]=(vcounts[v.topic]||0)+1;totalLikes+=parseInt(v.likes)||0;if(v.added_by_email)uniqueUsers.add(v.added_by_email);});
+  document.getElementById("cnt-all").textContent=newVids.length||"0";
+  document.getElementById("st-vids").textContent=newVids.length;
+  document.getElementById("st-likes").textContent=totalLikes;
+  document.getElementById("st-users").textContent=uniqueUsers.size;
+  updCounts();
+  document.getElementById("sync-lbl").textContent="עודכן "+fmtT(new Date().toISOString());
+  if(needFull){renderVids(filterVids());}
+  else{
+    changedIds.forEach(id=>{
+      const v=newMap[id];
+      const card=document.querySelector(`.card[data-vid="${id}"]`);
+      if(!card)return;
+      const lc=card.querySelector(".lc");if(lc)lc.textContent=v.likes||0;
+      const cc=card.querySelector(".cc");if(cc)cc.textContent=v.comments||0;
+      const vc=card.querySelector(".vc-num");if(vc)vc.textContent=fmtViews(v.views);
+    });
+  }
 }
 
-function handleGoogleCb(response) {
-  try {
-    const payload = parseJwt(response.credential);
-    user = {
-      name:    payload.name,
-      email:   payload.email,
-      picture: payload.picture,
-      isAdmin: payload.email === ADMIN_EMAIL
-    };
-    localStorage.setItem("ts_user", JSON.stringify(user));
-    setUserUI();
-    closeModal("lm");
-    toast(`ברוך הבא, ${user.name}!`, "ok");
-    // Notify backend
-    fetch(API, { method:"POST", body: JSON.stringify({ action:"addUser", email:user.email, name:user.name, picture:user.picture }) }).catch(()=>{});
-  } catch(e) { toast("שגיאה בהתחברות","err"); }
+/* GOOGLE AUTH */
+function initGoogle(){
+  if(typeof google==="undefined"){setTimeout(initGoogle,300);return;}
+  google.accounts.id.initialize({client_id:GOOGLE_CLIENT_ID,callback:handleGoogleCb,auto_select:false,cancel_on_tap_outside:false});
+  google.accounts.id.renderButton(document.getElementById("g-signin-login"),{theme:"filled_black",size:"large",text:"continue_with",locale:"he",width:280});
 }
-
-function parseJwt(token) {
-  const base64 = token.split(".")[1].replace(/-/g,"+").replace(/_/g,"/");
-  return JSON.parse(atob(base64));
+function handleGoogleCb(response){
+  try{
+    const p=parseJwt(response.credential);
+    user={name:p.name,email:p.email,picture:p.picture,isAdmin:p.email===ADMIN_EMAIL};
+    localStorage.setItem("ts_user",JSON.stringify(user));
+    setUserUI();closeModal("lm");
+    toast(`ברוך הבא, ${user.name}!`,"ok");
+    fetch(API,{method:"POST",body:JSON.stringify({action:"addUser",email:user.email,name:user.name,picture:user.picture})}).catch(()=>{});
+  }catch{toast("שגיאה בהתחברות","err");}
 }
-
-function setUserUI() {
-  if (!user) {
-    document.getElementById("user-chip").style.display = "none";
-    document.getElementById("login-btn").style.display = "";
-    document.getElementById("share-btn").style.display = "none";
-    document.getElementById("add-topic-btn").style.display = "none";
+function parseJwt(t){return JSON.parse(atob(t.split(".")[1].replace(/-/g,"+").replace(/_/g,"/")));}
+function setUserUI(){
+  if(!user){
+    document.getElementById("user-chip").style.display="none";
+    document.getElementById("login-btn").style.display="";
+    document.getElementById("share-btn").style.display="none";
+    document.getElementById("add-topic-btn").style.display="none";
     return;
   }
-  document.getElementById("user-chip").style.display = "";
-  document.getElementById("login-btn").style.display = "none";
-  document.getElementById("share-btn").style.display = "";
-
-  // Avatar
-  const ava = document.getElementById("hdr-ava");
-  if (user.picture) {
-    ava.innerHTML = `<img src="${esc(user.picture)}" alt="${esc(user.name)}">`;
-  } else {
-    ava.innerHTML = `<span id="hdr-ava-txt">${esc(user.name[0].toUpperCase())}</span>`;
-  }
-  document.getElementById("hdr-name").textContent = user.name;
-  document.getElementById("drop-email-lbl").textContent = user.email;
-
-  if (user.isAdmin) {
-    document.getElementById("admin-btn").style.display = "";
-    document.getElementById("admin-sep").style.display = "";
-    document.getElementById("add-topic-btn").style.display = "";
-  }
-
-  // Re-render to show delete buttons
+  document.getElementById("user-chip").style.display="";
+  document.getElementById("login-btn").style.display="none";
+  document.getElementById("share-btn").style.display="";
+  const ava=document.getElementById("hdr-ava");
+  ava.innerHTML=user.picture?`<img src="${esc(user.picture)}" alt="">`:esc(user.name[0].toUpperCase());
+  document.getElementById("hdr-name").textContent=user.name;
+  document.getElementById("drop-email-lbl").textContent=user.email;
+  if(user.isAdmin){document.getElementById("admin-btn").style.display="";document.getElementById("admin-sep").style.display="";document.getElementById("add-topic-btn").style.display="";}
   renderVids(filterVids());
 }
+function logout(){user=null;localStorage.removeItem("ts_user");if(typeof google!=="undefined")google.accounts.id.disableAutoSelect();setUserUI();closeDrop();renderVids(filterVids());toast("יצאת מהחשבון","info");}
+function toggleDrop(){document.getElementById("user-drop").classList.toggle("open");}
+function closeDrop(){document.getElementById("user-drop").classList.remove("open");}
 
-function logout() {
-  user = null;
-  localStorage.removeItem("ts_user");
-  if (typeof google !== "undefined") google.accounts.id.disableAutoSelect();
-  setUserUI();
-  closeDrop();
-  renderVids(filterVids());
-  toast("יצאת מהחשבון", "info");
-}
+/* THEME */
+function setTheme(t){document.documentElement.setAttribute("data-theme",t);localStorage.setItem("ts_th",t);document.getElementById("i-sun").style.display=t==="dark"?"none":"";document.getElementById("i-moon").style.display=t==="light"?"none":"";}
 
-function toggleDrop() {
-  document.getElementById("user-drop").classList.toggle("open");
-}
-function closeDrop() {
-  document.getElementById("user-drop").classList.remove("open");
-}
-
-/* ═══════════════════════════════════════════════
-   THEME
-═══════════════════════════════════════════════ */
-function setTheme(t) {
-  document.documentElement.setAttribute("data-theme", t);
-  localStorage.setItem("ts_th", t);
-  document.getElementById("i-sun").style.display  = t === "dark" ? "none" : "";
-  document.getElementById("i-moon").style.display = t === "light" ? "none" : "";
-}
-
-/* ═══════════════════════════════════════════════
-   DATA LOADING
-═══════════════════════════════════════════════ */
-async function loadTopics() {
-  try {
-    const r = await fetch(`${API}?action=getTopics`);
-    const d = await r.json();
-    if (d.success) { topics = d.topics; renderTopics(); }
-  } catch { toast("שגיאה בטעינת נושאים","err"); }
-}
-
-async function loadVids() {
-  showSkel();
-  try {
-    const r = await fetch(`${API}?action=getVideos`);
-    const d = await r.json();
-    if (d.success) {
-      allVids = d.videos;
-      vcounts = {};
-      totalLikes = 0;
-      uniqueUsers.clear();
-      d.videos.forEach(v => {
-        vcounts[v.topic] = (vcounts[v.topic]||0)+1;
-        totalLikes += parseInt(v.likes)||0;
-        if (v.added_by_email) uniqueUsers.add(v.added_by_email);
-      });
-      document.getElementById("cnt-all").textContent = d.videos.length || "0";
-      document.getElementById("st-vids").textContent   = d.videos.length;
-      document.getElementById("st-topics").textContent = topics.length;
-      document.getElementById("st-likes").textContent  = totalLikes;
-      document.getElementById("st-users").textContent  = uniqueUsers.size;
-      updCounts();
-      renderVids(filterVids());
-      document.getElementById("sync-lbl").textContent = "עודכן " + fmtT(new Date().toISOString());
+/* DATA */
+async function loadTopics(){try{const r=await fetch(`${API}?action=getTopics`);const d=await r.json();if(d.success){topics=d.topics;renderTopics();}}catch{}}
+async function loadVids(initial=false){
+  if(initial)showSkel();
+  try{
+    const r=await fetch(`${API}?action=getVideos`);const d=await r.json();
+    if(d.success){
+      allVids=d.videos;vcounts={};totalLikes=0;uniqueUsers.clear();
+      d.videos.forEach(v=>{vcounts[v.topic]=(vcounts[v.topic]||0)+1;totalLikes+=parseInt(v.likes)||0;if(v.added_by_email)uniqueUsers.add(v.added_by_email);});
+      document.getElementById("cnt-all").textContent=d.videos.length||"0";
+      document.getElementById("st-vids").textContent=d.videos.length;
+      document.getElementById("st-topics").textContent=topics.length;
+      document.getElementById("st-likes").textContent=totalLikes;
+      document.getElementById("st-users").textContent=uniqueUsers.size;
+      updCounts();renderVids(filterVids());
+      document.getElementById("sync-lbl").textContent="עודכן "+fmtT(new Date().toISOString());
     }
-  } catch(e) {
-    toast("שגיאת רשת — בדוק את ה-API","err");
-    document.getElementById("feed").innerHTML = emptyH("שגיאת רשת","לא ניתן להתחבר לשרת. נסה שוב מאוחר יותר.");
-  }
+  }catch{toast("שגיאת רשת","err");document.getElementById("feed").innerHTML=emptyH("שגיאת רשת","לא ניתן להתחבר לשרת");}
 }
 
-/* ═══════════════════════════════════════════════
-   FILTERING & SORTING
-═══════════════════════════════════════════════ */
-function filterVids() {
-  let vs = [...allVids];
-  if (cur !== "all") vs = vs.filter(v => v.topic === cur);
-  if (srch.trim()) {
-    const q = srch.trim().toLowerCase();
-    vs = vs.filter(v =>
-      (v.title||"").toLowerCase().includes(q) ||
-      (v.description||"").toLowerCase().includes(q) ||
-      (v.added_by||"").toLowerCase().includes(q) ||
-      (v.topic||"").toLowerCase().includes(q)
-    );
-  }
-  if (sortMode === "hot") vs.sort((a,b) => (parseInt(b.likes)||0)-(parseInt(a.likes)||0));
+/* FILTER + SORT */
+function filterVids(){
+  let vs=[...allVids];
+  if(cur!=="all")vs=vs.filter(v=>v.topic===cur);
+  if(srch.trim()){const q=srch.trim().toLowerCase();vs=vs.filter(v=>(v.title||"").toLowerCase().includes(q)||(v.description||"").toLowerCase().includes(q)||(v.added_by||"").toLowerCase().includes(q)||(v.topic||"").toLowerCase().includes(q));}
+  if(sortMode==="hot")vs.sort((a,b)=>(parseInt(b.likes)||0)-(parseInt(a.likes)||0));
   return vs;
 }
+function setSort(m,el){sortMode=m;document.querySelectorAll(".sort-btn").forEach(b=>b.classList.remove("on"));el.classList.add("on");renderVids(filterVids());}
+function clearSearch(){document.getElementById("s-inp").value="";document.getElementById("srch-clear").style.display="none";srch="";renderVids(filterVids());}
 
-function setSort(mode, el) {
-  sortMode = mode;
-  document.querySelectorAll(".sort-btn").forEach(b => b.classList.remove("on"));
-  el.classList.add("on");
-  renderVids(filterVids());
+/* SUBMIT VIDEO */
+async function subVideo(){
+  if(!user){closeModal("vm");openModal("lm");return;}
+  const url=document.getElementById("v-url").value.trim(),ttl=document.getElementById("v-ttl").value.trim(),dsc=document.getElementById("v-dsc").value.trim(),tp=document.getElementById("v-tp").value;
+  if(!url||!ttl||!tp){toast("נא למלא את כל שדות החובה","err");return;}
+  if(!ytId(url)){toast("קישור יוטיוב לא תקין","err");return;}
+  const btn=document.getElementById("sub-vid-btn");btn.disabled=true;document.getElementById("sub-vid-txt").textContent="מפרסם...";
+  try{const r=await fetch(API,{method:"POST",body:JSON.stringify({action:"addVideo",youtube_url:url,title:ttl,description:dsc,topic:tp,added_by:user.name,added_by_email:user.email,added_by_picture:user.picture})});const d=await r.json();if(d.success){toast("הסרטון פורסם! 🎉","ok");closeModal("vm");clrForm();loadVids();}else toast(d.error||"שגיאה","err");}
+  catch{toast("שגיאת רשת","err");}
+  finally{btn.disabled=false;document.getElementById("sub-vid-txt").textContent="פרסם סרטון";}
 }
 
-function clearSearch() {
-  document.getElementById("s-inp").value = "";
-  document.getElementById("srch-clear").style.display = "none";
-  srch = "";
-  renderVids(filterVids());
+/* SUBMIT TOPIC */
+async function subTopic(){
+  if(!user?.isAdmin){toast("הרשאת מנהל נדרשת","err");return;}
+  const nm=document.getElementById("t-nm").value.trim(),clr=document.getElementById("t-clr").value;
+  if(!nm){toast("נא להזין שם נושא","err");return;}
+  try{const r=await fetch(API,{method:"POST",body:JSON.stringify({action:"addTopic",name:nm,color:clr})});const d=await r.json();if(d.success){cmap[nm]=clr;toast("נושא נוסף","ok");closeModal("tm");document.getElementById("t-nm").value="";loadTopics();}else toast(d.error||"שגיאה","err");}
+  catch{toast("שגיאת רשת","err");}
 }
 
-/* ═══════════════════════════════════════════════
-   SUBMIT VIDEO
-═══════════════════════════════════════════════ */
-async function subVideo() {
-  if (!user) { closeModal("vm"); openModal("lm"); return; }
-  const url = document.getElementById("v-url").value.trim();
-  const ttl = document.getElementById("v-ttl").value.trim();
-  const dsc = document.getElementById("v-dsc").value.trim();
-  const tp  = document.getElementById("v-tp").value;
-  if (!url || !ttl || !tp) { toast("נא למלא את כל שדות החובה","err"); return; }
-  const vid_id = ytId(url);
-  if (!vid_id) { toast("קישור יוטיוב לא תקין","err"); return; }
-
-  const btn = document.getElementById("sub-vid-btn");
-  btn.disabled = true;
-  document.getElementById("sub-vid-txt").textContent = "מפרסם...";
-
-  try {
-    const r = await fetch(API, { method:"POST", body: JSON.stringify({
-      action:"addVideo", youtube_url:url, title:ttl, description:dsc,
-      topic:tp, added_by:user.name, added_by_email:user.email, added_by_picture:user.picture
-    })});
-    const d = await r.json();
-    if (d.success) {
-      toast("הסרטון פורסם בהצלחה! 🎉","ok");
-      closeModal("vm"); clrForm(); loadVids();
-    } else toast(d.error||"שגיאה","err");
-  } catch { toast("שגיאת רשת","err"); }
-  finally { btn.disabled=false; document.getElementById("sub-vid-txt").textContent="פרסם סרטון"; }
-}
-
-/* ═══════════════════════════════════════════════
-   SUBMIT TOPIC
-═══════════════════════════════════════════════ */
-async function subTopic() {
-  if (!user?.isAdmin) { toast("הרשאת מנהל נדרשת","err"); return; }
-  const nm  = document.getElementById("t-nm").value.trim();
-  const clr = document.getElementById("t-clr").value;
-  if (!nm) { toast("נא להזין שם נושא","err"); return; }
-  try {
-    const r = await fetch(API, { method:"POST", body: JSON.stringify({ action:"addTopic", name:nm, color:clr })});
-    const d = await r.json();
-    if (d.success) {
-      cmap[nm] = clr;
-      toast("נושא נוסף בהצלחה","ok");
-      closeModal("tm"); document.getElementById("t-nm").value=""; loadTopics();
-    } else toast(d.error||"שגיאה","err");
-  } catch { toast("שגיאת רשת","err"); }
-}
-
-/* ═══════════════════════════════════════════════
-   LIKE
-═══════════════════════════════════════════════ */
-async function likeV(id, btn) {
-  if (!user) { openModal("lm"); return; }
-  if (liked.includes(id)) { toast("כבר לייקת סרטון זה 💜"); return; }
-  btn.classList.add("lkd");
-  try {
-    const r = await fetch(`${API}?action=like&id=${id}&email=${enc(user.email)}`);
-    const d = await r.json();
-    if (d.success) {
-      liked.push(id); localStorage.setItem("ts_lk", JSON.stringify(liked));
-      btn.querySelector(".lc").textContent = d.likes;
-    } else { btn.classList.remove("lkd"); }
-  } catch { btn.classList.remove("lkd"); }
-}
-
-/* ═══════════════════════════════════════════════
-   DELETE VIDEO (Admin)
-═══════════════════════════════════════════════ */
-function confirmDelete(id, title) {
-  document.getElementById("cf-title").textContent = "מחיקת סרטון";
-  document.getElementById("cf-msg").textContent = `האם אתה בטוח שברצונך למחוק את הסרטון "${title}"? פעולה זו אינה ניתנת לביטול.`;
-  const okBtn = document.getElementById("cf-ok");
-  okBtn.onclick = () => deleteVideo(id);
-  openModal("cm");
-}
-
-async function deleteVideo(id) {
-  closeModal("cm");
-  try {
-    const r = await fetch(API, { method:"POST", body: JSON.stringify({ action:"deleteVideo", id, admin_email:user.email })});
-    const d = await r.json();
-    if (d.success) { toast("הסרטון נמחק","ok"); loadVids(); if(admCurrentTab==="videos")openAdmin(); }
-    else toast(d.error||"שגיאה","err");
-  } catch { toast("שגיאת רשת","err"); }
-}
-
-function confirmDeleteTopic(name) {
-  document.getElementById("cf-title").textContent = "מחיקת נושא";
-  document.getElementById("cf-msg").textContent = `האם אתה בטוח שברצונך למחוק את הנושא "${name}"? כל הסרטונים בנושא זה יישארו ללא קטגוריה.`;
-  const okBtn = document.getElementById("cf-ok");
-  okBtn.onclick = () => deleteTopic(name);
-  openModal("cm");
-}
-
-async function deleteTopic(name) {
-  closeModal("cm");
-  try {
-    const r = await fetch(API, { method:"POST", body: JSON.stringify({ action:"deleteTopic", name, admin_email:user.email })});
-    const d = await r.json();
-    if (d.success) { toast("הנושא נמחק","ok"); loadTopics(); loadVids(); if(admCurrentTab==="topics")openAdmin(); }
-    else toast(d.error||"שגיאה","err");
-  } catch { toast("שגיאת רשת","err"); }
-}
-
-/* ═══════════════════════════════════════════════
-   RENDER TOPICS
-═══════════════════════════════════════════════ */
-function renderTopics() {
-  const list = document.getElementById("t-list");
-  const sel  = document.getElementById("v-tp");
-  list.innerHTML = "";
-  sel.innerHTML  = '<option value="">בחר נושא...</option>';
-  topics.forEach(t => {
-    const c = t.color || tclr(t.name);
-    cmap[t.name] = c;
-    const cnt = vcounts[t.name]||0;
-    const btn = document.createElement("button");
-    btn.className = "t-item" + (cur === t.name ? " on" : "");
-    btn.dataset.topic = t.name;
-    btn.innerHTML = `
-      <span class="t-inner">
-        <span class="t-dot" style="background:${c}"></span>
-        <span class="t-lbl">${esc(t.name)}</span>
-      </span>
-      <span class="t-cnt" data-tc="${esc(t.name)}">${cnt||"—"}</span>`;
-    btn.onclick = () => fTopic(t.name, btn);
-    list.appendChild(btn);
-    sel.innerHTML += `<option value="${esc(t.name)}">${esc(t.name)}</option>`;
-  });
-  document.getElementById("st-topics").textContent = topics.length;
-}
-
-function updCounts() {
-  document.querySelectorAll("[data-tc]").forEach(el => {
-    el.textContent = vcounts[el.dataset.tc] || "—";
-  });
-}
-
-/* ═══════════════════════════════════════════════
-   RENDER VIDEOS
-═══════════════════════════════════════════════ */
-function renderVids(vs) {
-  document.getElementById("f-title").textContent = cur === "all" ? "כל הסרטונים" : cur;
-  const fd = document.getElementById("feed");
-  if (!vs.length) {
-    fd.innerHTML = emptyH(
-      srch ? `אין תוצאות עבור "${srch}"` : "אין סרטונים עדיין",
-      srch ? "נסה מילת חיפוש אחרת" : "היה הראשון לשתף סרטון בנושא זה"
-    );
-    return;
+/* LIKE — optimistic toggle */
+async function likeV(id,btn){
+  if(!user){openModal("lm");return;}
+  const isLiked=liked.includes(id);
+  const heart=btn.querySelector(".heart-svg");
+  const lc=btn.querySelector(".lc");
+  const cur_count=parseInt(lc?.textContent||"0");
+  // Optimistic
+  if(isLiked){
+    liked=liked.filter(x=>x!==id);localStorage.setItem("ts_lk",JSON.stringify(liked));
+    btn.classList.remove("lkd");if(heart)heart.setAttribute("fill","none");if(lc)lc.textContent=Math.max(0,cur_count-1);
+    try{await fetch(`${API}?action=unlike&id=${id}&email=${enc(user.email)}`);}catch{}
+  }else{
+    liked.push(id);localStorage.setItem("ts_lk",JSON.stringify(liked));
+    btn.classList.add("lkd");if(heart)heart.setAttribute("fill","currentColor");if(lc)lc.textContent=cur_count+1;
+    try{const r=await fetch(`${API}?action=like&id=${id}&email=${enc(user.email)}`);const d=await r.json();if(d.success){if(lc)lc.textContent=d.likes;}else{liked=liked.filter(x=>x!==id);localStorage.setItem("ts_lk",JSON.stringify(liked));btn.classList.remove("lkd");if(heart)heart.setAttribute("fill","none");if(lc)lc.textContent=cur_count;}}catch{}
   }
-  const now = Date.now();
-  fd.innerHTML = vs.map((v,i) => {
-    const c = cmap[v.topic] || tclr(v.topic);
-    const hexAlpha = "1A";
-    const lk = liked.includes(v.id);
-    const isNew = v.timestamp && (now - new Date(v.timestamp)) < 3600000 * 24;
-    const canDel = user?.isAdmin || user?.email === v.added_by_email;
-    let avaHtml;
-    if (v.added_by_picture) {
-      avaHtml = `<div class="ava"><img src="${esc(v.added_by_picture)}" alt="${esc(v.added_by||'')}"></div>`;
-    } else {
-      avaHtml = `<div class="ava" style="background:${c}20;border-color:${c}40;color:${c}">${esc((v.added_by||"?")[0].toUpperCase())}</div>`;
-    }
-    return `<div class="card" style="animation-delay:${i*.04}s">
-      <div class="c-thumb" onclick="openVideo(${JSON.stringify(v).replace(/"/g,'&quot;')})">
-        <div class="c-ratio">
-          <img class="c-thumb-img" src="https://img.youtube.com/vi/${esc(v.video_id)}/mqdefault.jpg" alt="${esc(v.title)}" loading="lazy">
-          <div class="c-thumb-overlay">
-            <div class="c-play-btn">
-              <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
-                <path d="M4 2.5l8 4.5-8 4.5V2.5z" fill="white"/>
-              </svg>
-            </div>
-          </div>
-        </div>
-        ${isNew ? '<span class="c-new-badge">חדש</span>' : ""}
+}
+
+/* COPY LINK */
+function copyLink(videoId){
+  const url=`https://www.youtube.com/watch?v=${videoId}`;
+  navigator.clipboard.writeText(url).then(()=>toast("הקישור הועתק 📋","ok")).catch(()=>toast("שגיאה בהעתקה","err"));
+}
+
+/* VIEWS */
+function fmtViews(n){const num=parseInt(n)||0;if(num>=1000000)return(num/1000000).toFixed(1).replace(".0","")+"M";if(num>=1000)return(num/1000).toFixed(1).replace(".0","")+"K";return String(num);}
+
+/* ACTIVATE VIDEO (play in card) */
+function activateVideo(vidId,cardEl){
+  const wrap=cardEl.querySelector(".c-thumb-wrap");
+  const ratio=cardEl.querySelector(".c-ratio");
+  if(!wrap||!ratio)return;
+  wrap.style.opacity="0";
+  setTimeout(()=>{wrap.style.display="none";},220);
+  const fr=document.createElement("iframe");
+  fr.src=`https://www.youtube.com/embed/${vidId}?rel=0&modestbranding=1&autoplay=1`;
+  fr.allow="accelerometer;autoplay;clipboard-write;encrypted-media;gyroscope;picture-in-picture";
+  fr.allowFullscreen=true;
+  fr.style.cssText="position:absolute;inset:0;width:100%;height:100%;border:none;z-index:1";
+  ratio.appendChild(fr);
+  try{fetch(`${API}?action=view&id=${vidId}`).catch(()=>{});}catch{}
+}
+
+/* COMMENTS */
+async function toggleComments(id){
+  const sec=document.getElementById(`comments-${id}`);
+  if(!sec)return;
+  if(sec.classList.contains("open")){sec.classList.remove("open");return;}
+  sec.classList.add("open");
+  if(commentsCache[id]!==undefined){renderComments(id,commentsCache[id]);return;}
+  sec.innerHTML=`<div class="comments-empty">טוען תגובות...</div>`;
+  try{const r=await fetch(`${API}?action=getComments&vid=${enc(id)}`);const d=await r.json();commentsCache[id]=d.success?d.comments:[];renderComments(id,commentsCache[id]);}
+  catch{sec.innerHTML=`<div class="comments-empty">שגיאה בטעינת תגובות</div>`;}
+}
+function renderComments(id,comments){
+  const sec=document.getElementById(`comments-${id}`);if(!sec)return;
+  const loginLink=`<a href="#" onclick="openModal('lm');return false" style="color:var(--accent)">התחבר</a>`;
+  const inputRow=user?`<div class="comment-input-row"><textarea class="comment-input" id="cinput-${id}" placeholder="הוסף תגובה..." onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();submitComment('${id}')}"></textarea><button class="comment-send" onclick="submitComment('${id}')">שלח</button></div>`:`<div class="comments-empty" style="font-size:11px">${loginLink} כדי להגיב</div>`;
+  const commHtml=comments.length?comments.map(c=>{const av=c.picture?`<img src="${esc(c.picture)}" alt="">`:esc((c.author||"?")[0].toUpperCase());return`<div class="comment-item"><div class="comment-ava">${av}</div><div class="comment-bubble"><div class="comment-author">${esc(c.author||"אנונימי")}</div><div class="comment-text">${esc(c.text)}</div><div class="comment-time">${fmtT(c.timestamp)}</div></div></div>`}).join(""):`<div class="comments-empty">אין תגובות עדיין — היה הראשון!</div>`;
+  sec.innerHTML=commHtml+inputRow;
+}
+async function submitComment(id){
+  if(!user){openModal("lm");return;}
+  const inp=document.getElementById(`cinput-${id}`);if(!inp)return;
+  const text=inp.value.trim();if(!text)return;
+  const sendBtn=inp.nextElementSibling;
+  inp.disabled=true;if(sendBtn)sendBtn.disabled=true;
+  try{
+    const r=await fetch(API,{method:"POST",body:JSON.stringify({action:"addComment",vid:id,text,author:user.name,email:user.email,picture:user.picture})});
+    const d=await r.json();
+    if(d.success){
+      inp.value="";
+      commentsCache[id]=commentsCache[id]||[];
+      commentsCache[id].push({author:user.name,text,timestamp:new Date().toISOString(),picture:user.picture});
+      renderComments(id,commentsCache[id]);
+      const cc=document.querySelector(`.card[data-vid="${id}"] .cc`);if(cc)cc.textContent=parseInt(cc.textContent||"0")+1;
+    }else toast(d.error||"שגיאה","err");
+  }catch{toast("שגיאת רשת","err");}
+  finally{if(inp)inp.disabled=false;if(sendBtn)sendBtn.disabled=false;}
+}
+
+/* DELETE */
+function confirmDelete(id,title){
+  document.getElementById("cf-title").textContent="מחיקת סרטון";
+  document.getElementById("cf-msg").textContent=`האם למחוק את "${title}"? פעולה זו אינה ניתנת לביטול.`;
+  document.getElementById("cf-ok").onclick=()=>deleteVideo(id);
+  openModal("cm");
+}
+async function deleteVideo(id){
+  closeModal("cm");
+  try{const r=await fetch(API,{method:"POST",body:JSON.stringify({action:"deleteVideo",id,admin_email:user.email})});const d=await r.json();if(d.success){toast("הסרטון נמחק","ok");loadVids();if(admCurrentTab==="videos"&&document.getElementById("admin-panel").classList.contains("open"))renderAdmTab("videos");}else toast(d.error||"שגיאה","err");}
+  catch{toast("שגיאת רשת","err");}
+}
+function confirmDeleteTopic(name){
+  document.getElementById("cf-title").textContent="מחיקת נושא";
+  document.getElementById("cf-msg").textContent=`האם למחוק את הנושא "${name}"?`;
+  document.getElementById("cf-ok").onclick=()=>deleteTopic(name);
+  openModal("cm");
+}
+async function deleteTopic(name){
+  closeModal("cm");
+  try{const r=await fetch(API,{method:"POST",body:JSON.stringify({action:"deleteTopic",name,admin_email:user.email})});const d=await r.json();if(d.success){toast("הנושא נמחק","ok");loadTopics();loadVids();}else toast(d.error||"שגיאה","err");}
+  catch{toast("שגיאת רשת","err");}
+}
+
+/* RENDER TOPICS */
+function renderTopics(){
+  const list=document.getElementById("t-list"),sel=document.getElementById("v-tp");
+  list.innerHTML="";sel.innerHTML='<option value="">בחר נושא...</option>';
+  topics.forEach(t=>{
+    const c=t.color||tclr(t.name);cmap[t.name]=c;
+    const btn=document.createElement("button");btn.className="t-item"+(cur===t.name?" on":"");btn.dataset.topic=t.name;
+    btn.innerHTML=`<span class="t-inner"><span class="t-dot" style="background:${c}"></span><span class="t-lbl">${esc(t.name)}</span></span><span class="t-cnt" data-tc="${esc(t.name)}">${vcounts[t.name]||"—"}</span>`;
+    btn.onclick=()=>fTopic(t.name,btn);list.appendChild(btn);
+    sel.innerHTML+=`<option value="${esc(t.name)}">${esc(t.name)}</option>`;
+  });
+  document.getElementById("st-topics").textContent=topics.length;
+}
+function updCounts(){document.querySelectorAll("[data-tc]").forEach(el=>{el.textContent=vcounts[el.dataset.tc]||"—";});}
+
+/* RENDER VIDEOS */
+function renderVids(vs){
+  document.getElementById("f-title").textContent=cur==="all"?"כל הסרטונים":cur;
+  const fd=document.getElementById("feed");
+  if(!vs.length){fd.innerHTML=emptyH(srch?`אין תוצאות עבור "${srch}"`:"אין סרטונים עדיין",srch?"נסה מילת חיפוש אחרת":"היה הראשון לשתף סרטון");return;}
+  const now=Date.now();
+  fd.innerHTML=vs.map((v,i)=>{
+    const c=cmap[v.topic]||tclr(v.topic);
+    const lk=liked.includes(v.id);
+    const isNew=v.timestamp&&(now-new Date(v.timestamp))<86400000;
+    const canDel=user?.isAdmin||user?.email===v.added_by_email;
+    const avaContent=v.added_by_picture?`<img src="${esc(v.added_by_picture)}" alt="">`:esc((v.added_by||"?")[0].toUpperCase());
+    const avaStyle=v.added_by_picture?"":` style="background:${c}20;border-color:${c}40;color:${c}"`;
+    return `<div class="card" data-vid="${esc(v.id)}" style="animation-delay:${i*.04}s">
+  <div class="c-vid">
+    <div class="c-ratio">
+      <div class="c-thumb-wrap" onclick="activateVideo('${esc(v.video_id)}',this.closest('.card'))">
+        <img src="https://img.youtube.com/vi/${esc(v.video_id)}/mqdefault.jpg" alt="${esc(v.title)}" loading="lazy">
+        <div class="c-play-circle"><div class="c-play-btn"><svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M4 2.5l8 4.5-8 4.5V2.5z" fill="white"/></svg></div></div>
       </div>
-      <div class="c-body">
-        <div class="c-top">
-          <span class="c-cat" style="background:${c}20;color:${c};border:1px solid ${c}40">
-            <span class="c-cat-dot" style="background:${c}"></span>
-            ${esc(v.topic)}
-          </span>
-        </div>
-        <div class="c-title" style="cursor:pointer" onclick="openVideo(${JSON.stringify(v).replace(/"/g,'&quot;')})">${esc(v.title)}</div>
-        ${v.description ? `<div class="c-desc">${esc(v.description)}</div>` : ""}
-        <div class="c-foot">
-          <div class="c-author">
-            ${avaHtml}
-            <span class="c-author-name">${esc(v.added_by||"אנונימי")}</span>
-            <span class="c-time">· ${fmtT(v.timestamp)}</span>
-          </div>
-          <div class="c-acts">
-            <button class="act-btn${lk?" lkd":""}" onclick="likeV('${esc(v.id)}',this)" title="${lk?"הורדת לייק":"לייק"}">
-              <svg width="12" height="12" viewBox="0 0 14 13" fill="${lk?"currentColor":"none"}">
-                <path d="M7 12S1 8.2 1 4.5C1 2.6 2.6 1 4.5 1c.9 0 1.8.38 2.5 1 .7-.62 1.6-1 2.5-1C11.4 1 13 2.6 13 4.5 13 8.2 7 12 7 12z"
-                  stroke="currentColor" stroke-width="1.25"/>
-              </svg>
-              <span class="lc">${v.likes||0}</span>
-            </button>
-            ${canDel ? `<button class="act-btn del-btn" onclick="confirmDelete('${esc(v.id)}','${esc(v.title).replace(/'/g,"\\'")}')">
-              <svg width="12" height="12" viewBox="0 0 14 14" fill="none"><path d="M2 4h10M5 4V2.5h4V4M6 7v4M8 7v4M3 4l.7 7.5a1 1 0 001 .9h4.6a1 1 0 001-.9L11 4" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round"/></svg>
-            </button>` : ""}
-          </div>
-        </div>
+      ${isNew?'<span class="c-new-badge">חדש</span>':""}
+      <div class="c-views"><svg width="10" height="10" viewBox="0 0 12 12" fill="none"><path d="M1 6s2-4 5-4 5 4 5 4-2 4-5 4-5-4-5-4z" stroke="currentColor" stroke-width="1.1"/><circle cx="6" cy="6" r="1.5" fill="currentColor"/></svg><span class="vc-num">${fmtViews(v.views)}</span></div>
+    </div>
+  </div>
+  <div class="c-body">
+    <div class="c-top"><span class="c-cat" style="background:${c}20;color:${c};border:1px solid ${c}40"><span class="c-cat-dot" style="background:${c}"></span>${esc(v.topic)}</span></div>
+    <div class="c-title">${esc(v.title)}</div>
+    ${v.description?`<div class="c-desc">${esc(v.description)}</div>`:""}
+    <div class="c-foot">
+      <div class="c-author"><div class="ava"${avaStyle}>${avaContent}</div><span class="c-author-name">${esc(v.added_by||"אנונימי")}</span><span class="c-time">· ${fmtT(v.timestamp)}</span></div>
+      <div class="c-acts">
+        <button class="act-btn${lk?" lkd":""}" onclick="likeV('${esc(v.id)}',this)">
+          <svg class="heart-svg" width="12" height="12" viewBox="0 0 14 13" fill="${lk?"currentColor":"none"}"><path d="M7 12S1 8.2 1 4.5C1 2.6 2.6 1 4.5 1c.9 0 1.8.38 2.5 1 .7-.62 1.6-1 2.5-1C11.4 1 13 2.6 13 4.5 13 8.2 7 12 7 12z" stroke="currentColor" stroke-width="1.25"/></svg>
+          <span class="lc">${v.likes||0}</span>
+        </button>
+        <button class="act-btn" onclick="toggleComments('${esc(v.id)}')">
+          <svg width="12" height="12" viewBox="0 0 14 14" fill="none"><path d="M2 2h10a1 1 0 011 1v7a1 1 0 01-1 1H5l-3 2V3a1 1 0 011-1z" stroke="currentColor" stroke-width="1.25" stroke-linejoin="round"/></svg>
+          <span class="cc">${v.comments||0}</span>
+        </button>
+        <button class="act-btn" onclick="copyLink('${esc(v.video_id)}')" title="העתק קישור">
+          <svg width="12" height="12" viewBox="0 0 14 14" fill="none"><path d="M5.5 8.5a3.5 3.5 0 005 0l2-2a3.5 3.5 0 00-5-5l-1 1" stroke="currentColor" stroke-width="1.25" stroke-linecap="round"/><path d="M8.5 5.5a3.5 3.5 0 00-5 0l-2 2a3.5 3.5 0 005 5l1-1" stroke="currentColor" stroke-width="1.25" stroke-linecap="round"/></svg>
+        </button>
+        ${canDel?`<button class="act-btn del-btn" onclick="confirmDelete('${esc(v.id)}','${esc(v.title).replace(/'/g,"\\'")}')"><svg width="12" height="12" viewBox="0 0 14 14" fill="none"><path d="M2 4h10M5 4V2.5h4V4M6 7v4M8 7v4M3 4l.7 7.5a1 1 0 001 .9h4.6a1 1 0 001-.9L11 4" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round"/></svg></button>`:""}
       </div>
-    </div>`;
+    </div>
+  </div>
+  <div class="comments-section card-comments" id="comments-${esc(v.id)}"></div>
+</div>`;
   }).join("");
 }
 
-/* ═══════════════════════════════════════════════
-   VIDEO LIGHTBOX
-═══════════════════════════════════════════════ */
-let vlCurrentVideo = null;
-
-function openVideo(v) {
-  vlCurrentVideo = v;
-  const c = cmap[v.topic] || tclr(v.topic);
-  const lk = liked.includes(v.id);
-
-  // iframe with autoplay
-  document.getElementById("vl-fr").src =
-    `https://www.youtube.com/embed/${v.video_id}?rel=0&modestbranding=1&autoplay=1`;
-
-  // Category badge
-  const catEl = document.getElementById("vl-cat");
-  catEl.textContent = v.topic;
-  catEl.style.cssText = `background:${c}20;color:${c};border:1px solid ${c}40`;
-
-  // Title & desc
-  document.getElementById("vl-title").textContent = v.title;
-  const descEl = document.getElementById("vl-desc");
-  descEl.textContent = v.description || "";
-  descEl.style.display = v.description ? "" : "none";
-
-  // Author
-  const avaEl = document.getElementById("vl-ava");
-  if (v.added_by_picture) {
-    avaEl.innerHTML = `<img src="${esc(v.added_by_picture)}" alt="" style="width:100%;height:100%;object-fit:cover;border-radius:50%">`;
-  } else {
-    avaEl.textContent = (v.added_by||"?")[0].toUpperCase();
-    avaEl.style.cssText = `background:${c}20;border-color:${c}40;color:${c}`;
-  }
-  document.getElementById("vl-by").textContent = v.added_by || "אנונימי";
-  document.getElementById("vl-time").textContent = "· " + fmtT(v.timestamp);
-
-  // Like
-  document.getElementById("vl-likes").textContent = v.likes || 0;
-  const likeBtn = document.getElementById("vl-like-btn");
-  likeBtn.classList.toggle("lkd", lk);
-  document.getElementById("vl-heart").setAttribute("fill", lk ? "currentColor" : "none");
-
-  // YT link
-  document.getElementById("vl-yt-link").href = `https://www.youtube.com/watch?v=${v.video_id}`;
-
-  // Open
-  document.getElementById("vl").classList.add("open");
-  document.body.style.overflow = "hidden";
-}
-
-function closeVideo() {
-  document.getElementById("vl").classList.remove("open");
-  document.getElementById("vl-fr").src = ""; // stop playback
-  document.body.style.overflow = "";
-  vlCurrentVideo = null;
-}
-
-async function vlLike() {
-  if (!vlCurrentVideo) return;
-  if (!user) { closeVideo(); openModal("lm"); return; }
-  const id = vlCurrentVideo.id;
-  if (liked.includes(id)) { toast("כבר לייקת סרטון זה 💜"); return; }
-  const btn = document.getElementById("vl-like-btn");
-  btn.classList.add("lkd");
-  document.getElementById("vl-heart").setAttribute("fill","currentColor");
-  try {
-    const r = await fetch(`${API}?action=like&id=${id}&email=${enc(user.email)}`);
-    const d = await r.json();
-    if (d.success) {
-      liked.push(id); localStorage.setItem("ts_lk", JSON.stringify(liked));
-      document.getElementById("vl-likes").textContent = d.likes;
-      // sync card in feed
-      const cardBtn = document.querySelector(`[data-vid="${id}"] .act-btn`);
-      if (cardBtn) { cardBtn.classList.add("lkd"); cardBtn.querySelector(".lc").textContent = d.likes; }
-    } else { btn.classList.remove("lkd"); document.getElementById("vl-heart").setAttribute("fill","none"); }
-  } catch { btn.classList.remove("lkd"); document.getElementById("vl-heart").setAttribute("fill","none"); }
-}
-
-
-let admCurrentTab = "videos";
-function openAdmin() {
-  if (!user?.isAdmin) return;
-  document.getElementById("admin-panel").classList.add("open");
-  renderAdmTab(admCurrentTab);
-}
-function closeAdmin() {
-  document.getElementById("admin-panel").classList.remove("open");
-}
-function admTab(tab, el) {
-  admCurrentTab = tab;
-  document.querySelectorAll(".adm-tab").forEach(b => b.classList.remove("on"));
-  el.classList.add("on");
-  renderAdmTab(tab);
-}
-
-function renderAdmTab(tab) {
-  // Stats row
-  document.getElementById("adm-stats").innerHTML = `
-    <div class="admin-stat"><div class="admin-stat-n">${allVids.length}</div><div class="admin-stat-l">סרטונים</div></div>
-    <div class="admin-stat"><div class="admin-stat-n">${topics.length}</div><div class="admin-stat-l">נושאים</div></div>
-    <div class="admin-stat"><div class="admin-stat-n">${totalLikes}</div><div class="admin-stat-l">סה"כ לייקים</div></div>
-    <div class="admin-stat"><div class="admin-stat-n">${uniqueUsers.size}</div><div class="admin-stat-l">משתמשים</div></div>
-  `;
-
-  const c = document.getElementById("adm-content");
-  if (tab === "videos") {
-    if (!allVids.length) { c.innerHTML = `<div class="empty"><div class="empty-ico"><svg width="18" height="18" viewBox="0 0 20 20" fill="none"><rect x="2" y="2" width="16" height="16" rx="4" stroke="currentColor" stroke-width="1.4"/><path d="M8 7l5 3-5 3V7z" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/></svg></div><h3>אין סרטונים</h3></div>`; return; }
-    c.innerHTML = `<table class="tbl">
-      <thead><tr>
-        <th>כותרת</th><th>נושא</th><th>שיתף</th><th>לייקים</th><th>תאריך</th><th>פעולות</th>
-      </tr></thead>
-      <tbody>${allVids.map(v=>`<tr>
-        <td style="max-width:220px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:var(--text)">${esc(v.title)}</td>
-        <td><span style="color:${cmap[v.topic]||tclr(v.topic)}">${esc(v.topic)}</span></td>
-        <td>${esc(v.added_by||"—")}</td>
-        <td>${v.likes||0}</td>
-        <td style="white-space:nowrap">${fmtT(v.timestamp)}</td>
-        <td><button class="admin-card-btn danger" onclick="confirmDelete('${esc(v.id)}','${esc(v.title).replace(/'/g,"\\'")}')">מחק</button></td>
-      </tr>`).join("")}</tbody>
-    </table>`;
-  } else if (tab === "topics") {
-    c.innerHTML = `<div class="admin-grid">${topics.map(t=>{
-      const clr = t.color||tclr(t.name);
-      const cnt = vcounts[t.name]||0;
-      return `<div class="admin-card">
-        <div class="admin-card-ico" style="background:${clr}20;border:1px solid ${clr}40">
-          <div style="width:14px;height:14px;border-radius:4px;background:${clr}"></div>
-        </div>
-        <div class="admin-card-body">
-          <div class="admin-card-title">${esc(t.name)}</div>
-          <div class="admin-card-sub">${cnt} סרטונים בנושא זה</div>
-          <div class="admin-card-acts">
-            <button class="admin-card-btn danger" onclick="confirmDeleteTopic('${esc(t.name).replace(/'/g,"\\'")}')">מחק נושא</button>
-          </div>
-        </div>
-      </div>`;
-    }).join("")}
-    <div class="admin-card" style="border-style:dashed;cursor:pointer" onclick="closeAdmin();openModal('tm')">
-      <div class="admin-card-ico" style="background:var(--accent-dim);border:1px solid var(--accent-mid)">
-        <svg width="16" height="16" viewBox="0 0 14 14" fill="none"><path d="M7 1v12M1 7h12" stroke="var(--accent)" stroke-width="1.5" stroke-linecap="round"/></svg>
-      </div>
-      <div class="admin-card-body">
-        <div class="admin-card-title" style="color:var(--accent)">הוסף נושא חדש</div>
-        <div class="admin-card-sub">לחץ להוספת קטגוריה חדשה</div>
-      </div>
-    </div>
-    </div>`;
-  } else if (tab === "users") {
-    // Collect users from video data
-    const usersMap = {};
-    allVids.forEach(v => {
-      const k = v.added_by_email||v.added_by||"אנונימי";
-      if (!usersMap[k]) usersMap[k] = { name:v.added_by||"אנונימי", email:v.added_by_email||"", count:0, likes:0, picture:v.added_by_picture||"" };
-      usersMap[k].count++;
-      usersMap[k].likes += parseInt(v.likes)||0;
-    });
-    const users = Object.values(usersMap).sort((a,b)=>b.count-a.count);
-    if (!users.length) { c.innerHTML = `<div class="empty"><h3>אין משתמשים</h3></div>`; return; }
-    c.innerHTML = `<table class="tbl">
-      <thead><tr><th>משתמש</th><th>אימייל</th><th>סרטונים</th><th>לייקים שקיבל</th></tr></thead>
-      <tbody>${users.map(u=>`<tr>
-        <td style="color:var(--text)">
-          <div style="display:flex;align-items:center;gap:.5rem">
-            ${u.picture ? `<img src="${esc(u.picture)}" style="width:24px;height:24px;border-radius:50%;object-fit:cover">` : `<div class="ava">${esc(u.name[0]||"?")}</div>`}
-            ${esc(u.name)}
-            ${u.email===ADMIN_EMAIL?'<span style="color:var(--gold);font-size:12px">👑</span>':""}
-          </div>
-        </td>
-        <td style="font-size:12px">${esc(u.email||"—")}</td>
-        <td>${u.count}</td>
-        <td>${u.likes}</td>
-      </tr>`).join("")}</tbody>
-    </table>`;
+/* ADMIN */
+let admCurrentTab="videos";
+function openAdmin(){if(!user?.isAdmin)return;document.getElementById("admin-panel").classList.add("open");renderAdmTab(admCurrentTab);}
+function closeAdmin(){document.getElementById("admin-panel").classList.remove("open");}
+function admTab(tab,el){admCurrentTab=tab;document.querySelectorAll(".adm-tab").forEach(b=>b.classList.remove("on"));el.classList.add("on");renderAdmTab(tab);}
+function renderAdmTab(tab){
+  document.getElementById("adm-stats").innerHTML=`<div class="admin-stat"><div class="admin-stat-n">${allVids.length}</div><div class="admin-stat-l">סרטונים</div></div><div class="admin-stat"><div class="admin-stat-n">${topics.length}</div><div class="admin-stat-l">נושאים</div></div><div class="admin-stat"><div class="admin-stat-n">${totalLikes}</div><div class="admin-stat-l">לייקים</div></div><div class="admin-stat"><div class="admin-stat-n">${uniqueUsers.size}</div><div class="admin-stat-l">משתמשים</div></div>`;
+  const c=document.getElementById("adm-content");
+  if(tab==="videos"){
+    if(!allVids.length){c.innerHTML=`<div class="empty"><h3>אין סרטונים</h3></div>`;return;}
+    c.innerHTML=`<table class="tbl"><thead><tr><th>כותרת</th><th>נושא</th><th>שיתף</th><th>לייקים</th><th>צפיות</th><th>תגובות</th><th>תאריך</th><th>פעולות</th></tr></thead><tbody>${allVids.map(v=>`<tr><td style="max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:var(--text)">${esc(v.title)}</td><td><span style="color:${cmap[v.topic]||tclr(v.topic)}">${esc(v.topic)}</span></td><td>${esc(v.added_by||"—")}</td><td>${v.likes||0}</td><td>${fmtViews(v.views)}</td><td>${v.comments||0}</td><td style="white-space:nowrap">${fmtT(v.timestamp)}</td><td><button class="admin-card-btn danger" onclick="confirmDelete('${esc(v.id)}','${esc(v.title).replace(/'/g,"\\'")}')">מחק</button></td></tr>`).join("")}</tbody></table>`;
+  }else if(tab==="topics"){
+    c.innerHTML=`<div class="admin-grid">${topics.map(t=>{const clr=t.color||tclr(t.name),cnt=vcounts[t.name]||0;return`<div class="admin-card"><div class="admin-card-ico" style="background:${clr}20;border:1px solid ${clr}40"><div style="width:14px;height:14px;border-radius:4px;background:${clr}"></div></div><div class="admin-card-body"><div class="admin-card-title">${esc(t.name)}</div><div class="admin-card-sub">${cnt} סרטונים</div><div class="admin-card-acts"><button class="admin-card-btn danger" onclick="confirmDeleteTopic('${esc(t.name).replace(/'/g,"\\'")}')">מחק</button></div></div></div>`;}).join("")}<div class="admin-card" style="border-style:dashed;cursor:pointer" onclick="closeAdmin();openModal('tm')"><div class="admin-card-ico" style="background:var(--accent-dim);border:1px solid var(--accent-mid)"><svg width="16" height="16" viewBox="0 0 14 14" fill="none"><path d="M7 1v12M1 7h12" stroke="var(--accent)" stroke-width="1.5" stroke-linecap="round"/></svg></div><div class="admin-card-body"><div class="admin-card-title" style="color:var(--accent)">הוסף נושא חדש</div><div class="admin-card-sub">לחץ להוספה</div></div></div></div>`;
+  }else if(tab==="users"){
+    const usersMap={};allVids.forEach(v=>{const k=v.added_by_email||v.added_by||"?";if(!usersMap[k])usersMap[k]={name:v.added_by||"אנונימי",email:v.added_by_email||"",count:0,likes:0,picture:v.added_by_picture||""};usersMap[k].count++;usersMap[k].likes+=parseInt(v.likes)||0;});
+    const us=Object.values(usersMap).sort((a,b)=>b.count-a.count);
+    if(!us.length){c.innerHTML=`<div class="empty"><h3>אין משתמשים</h3></div>`;return;}
+    c.innerHTML=`<table class="tbl"><thead><tr><th>משתמש</th><th>אימייל</th><th>סרטונים</th><th>לייקים</th></tr></thead><tbody>${us.map(u=>`<tr><td style="color:var(--text)"><div style="display:flex;align-items:center;gap:.5rem">${u.picture?`<img src="${esc(u.picture)}" style="width:24px;height:24px;border-radius:50%;object-fit:cover">`:`<div class="ava">${esc(u.name[0]||"?")}</div>`}${esc(u.name)}${u.email===ADMIN_EMAIL?'<span style="color:var(--gold)">👑</span>':""}</div></td><td style="font-size:12px">${esc(u.email||"—")}</td><td>${u.count}</td><td>${u.likes}</td></tr>`).join("")}</tbody></table>`;
   }
 }
 
-/* ═══════════════════════════════════════════════
-   COLOR GRID
-═══════════════════════════════════════════════ */
-function buildColorGrid() {
-  const grid = document.getElementById("clr-grid");
-  COLORS.forEach((c,i) => {
-    const s = document.createElement("button");
-    s.className = "color-swatch" + (i===0?" sel":"");
-    s.style.background = c;
-    s.title = c;
-    s.onclick = () => {
-      document.querySelectorAll(".color-swatch").forEach(x=>x.classList.remove("sel"));
-      s.classList.add("sel");
-      document.getElementById("t-clr").value = c;
-    };
-    grid.appendChild(s);
-  });
-}
-
-/* ═══════════════════════════════════════════════
-   MODALS
-═══════════════════════════════════════════════ */
-function openModal(id) {
-  if ((id==="vm"||id==="tm") && !user) { openModal("lm"); return; }
-  document.getElementById(id).classList.add("open");
-  document.body.style.overflow = "hidden";
-}
-function closeModal(id) {
-  document.getElementById(id).classList.remove("open");
-  document.body.style.overflow = "";
-}
-
-/* ═══════════════════════════════════════════════
-   TOPIC FILTER
-═══════════════════════════════════════════════ */
-function fTopic(t, el) {
-  cur = t;
-  document.querySelectorAll(".t-item").forEach(b => b.classList.remove("on"));
-  el.classList.add("on");
-  renderVids(filterVids());
-}
-
-/* ═══════════════════════════════════════════════
-   YOUTUBE URL PARSING
-═══════════════════════════════════════════════ */
-function onUrl(val) {
-  const id = ytId(val);
-  const pb = document.getElementById("v-prev");
-  const pi = document.getElementById("v-fr");
-  if (id) { pi.src=`https://www.youtube.com/embed/${id}?rel=0&modestbranding=1`; pb.classList.add("show"); }
-  else    { pi.src=""; pb.classList.remove("show"); }
-}
-function ytId(url) {
-  const m = url.match(/(?:youtube\.com\/(?:watch\?v=|embed\/|shorts\/)|youtu\.be\/)([^&\n?#]+)/);
-  return m ? m[1] : null;
-}
-
-/* ═══════════════════════════════════════════════
-   HELPERS
-═══════════════════════════════════════════════ */
-function showSkel() {
-  document.getElementById("feed").innerHTML = [1,2,3].map(() =>
-    `<div class="skel"><div class="sk-t"></div><div class="sk-b"><div class="sk-l w30"></div><div class="sk-l w65"></div><div class="sk-l w45"></div><div class="sk-l w80"></div></div></div>`
-  ).join("");
-}
-
-function emptyH(h,p) {
-  return `<div class="empty">
-    <div class="empty-ico">
-      <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-        <rect x="2" y="2" width="16" height="16" rx="4" stroke="currentColor" stroke-width="1.4"/>
-        <path d="M8 7l5 3-5 3V7z" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/>
-      </svg>
-    </div>
-    <h3>${h}</h3><p>${p}</p>
-    ${user?`<button class="empty-btn" onclick="openModal('vm')">שתף סרטון ראשון</button>`:""}
-  </div>`;
-}
-
-function fmtT(iso) {
-  if (!iso) return "";
-  const s = (Date.now() - new Date(iso)) / 1000;
-  if (s < 60)    return "עכשיו";
-  if (s < 3600)  return `לפני ${Math.floor(s/60)} דק'`;
-  if (s < 86400) return `לפני ${Math.floor(s/3600)} שע'`;
-  if (s < 86400*7) return `לפני ${Math.floor(s/86400)} ימים`;
-  return new Date(iso).toLocaleDateString("he-IL", {day:"numeric",month:"short",year:"numeric"});
-}
-
-function esc(s) {
-  return String(s||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;").replace(/'/g,"&#39;");
-}
-function enc(s) { return encodeURIComponent(s); }
-
-function clrForm() {
-  ["v-url","v-ttl","v-dsc"].forEach(id => document.getElementById(id).value="");
-  document.getElementById("v-tp").value="";
-  document.getElementById("v-prev").classList.remove("show");
-  document.getElementById("v-fr").src="";
-}
-
-function toast(msg, type="") {
-  const el = document.createElement("div");
-  el.className = "toast" + (type ? ` ${type}` : "");
-  el.textContent = msg;
-  document.getElementById("toasts").appendChild(el);
-  setTimeout(() => { el.style.opacity="0"; el.style.transition="opacity .3s"; setTimeout(()=>el.remove(),300); }, 3000);
-}
+/* HELPERS */
+function buildColorGrid(){const grid=document.getElementById("clr-grid");COLORS.forEach((c,i)=>{const s=document.createElement("button");s.className="color-swatch"+(i===0?" sel":"");s.style.background=c;s.title=c;s.onclick=()=>{document.querySelectorAll(".color-swatch").forEach(x=>x.classList.remove("sel"));s.classList.add("sel");document.getElementById("t-clr").value=c;};grid.appendChild(s);});}
+function openModal(id){if((id==="vm"||id==="tm")&&!user){openModal("lm");return;}document.getElementById(id).classList.add("open");document.body.style.overflow="hidden";}
+function closeModal(id){document.getElementById(id).classList.remove("open");document.body.style.overflow="";}
+function fTopic(t,el){cur=t;document.querySelectorAll(".t-item").forEach(b=>b.classList.remove("on"));el.classList.add("on");renderVids(filterVids());}
+function onUrl(val){const id=ytId(val),pb=document.getElementById("v-prev"),pi=document.getElementById("v-fr");if(id){pi.src=`https://www.youtube.com/embed/${id}?rel=0`;pb.classList.add("show");}else{pi.src="";pb.classList.remove("show");}}
+function ytId(url){const m=url.match(/(?:youtube\.com\/(?:watch\?v=|embed\/|shorts\/)|youtu\.be\/)([^&\n?#]+)/);return m?m[1]:null;}
+function showSkel(){document.getElementById("feed").innerHTML=[1,2,3].map(()=>`<div class="skel"><div class="sk-t"></div><div class="sk-b"><div class="sk-l w30"></div><div class="sk-l w65"></div><div class="sk-l w45"></div><div class="sk-l w80"></div></div></div>`).join("");}
+function emptyH(h,p){return`<div class="empty"><div class="empty-ico"><svg width="20" height="20" viewBox="0 0 20 20" fill="none"><rect x="2" y="2" width="16" height="16" rx="4" stroke="currentColor" stroke-width="1.4"/><path d="M8 7l5 3-5 3V7z" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/></svg></div><h3>${h}</h3><p>${p}</p>${user?`<button class="empty-btn" onclick="openModal('vm')">שתף סרטון ראשון</button>`:""}</div>`;}
+function fmtT(iso){if(!iso)return"";const s=(Date.now()-new Date(iso))/1000;if(s<60)return"עכשיו";if(s<3600)return`לפני ${Math.floor(s/60)} דק'`;if(s<86400)return`לפני ${Math.floor(s/3600)} שע'`;if(s<604800)return`לפני ${Math.floor(s/86400)} ימים`;return new Date(iso).toLocaleDateString("he-IL",{day:"numeric",month:"short",year:"numeric"});}
+function esc(s){return String(s||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;").replace(/'/g,"&#39;");}
+function enc(s){return encodeURIComponent(s);}
+function clrForm(){["v-url","v-ttl","v-dsc"].forEach(id=>document.getElementById(id).value="");document.getElementById("v-tp").value="";document.getElementById("v-prev").classList.remove("show");document.getElementById("v-fr").src="";}
+function toast(msg,type=""){const el=document.createElement("div");el.className="toast"+(type?` ${type}`:"");el.textContent=msg;document.getElementById("toasts").appendChild(el);setTimeout(()=>{el.style.opacity="0";el.style.transition="opacity .3s";setTimeout(()=>el.remove(),300);},3000);}
 </script>
 </body>
 </html>
