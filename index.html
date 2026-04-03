@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="he" dir="rtl" data-theme="dark">
+<html lang="he" dir="rtl" data-theme="light">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -274,6 +274,31 @@
     /* RESPONSIVE */
     @media(max-width:900px){.sdb{display:none}.main{border-right:none;padding-right:0}.card,.skel{grid-template-columns:160px 1fr}.admin-stat-grid{grid-template-columns:repeat(2,1fr)}}
     @media(max-width:600px){.card,.skel{grid-template-columns:1fr}.skel{height:auto}.skel .sk-t{height:130px}.c-vid{order:-1}.srch{max-width:160px}.hdr,.layout{padding:0 1rem}.admin-stat-grid{grid-template-columns:repeat(2,1fr)}}
+
+    /* ── CLUSTERS ── */
+    .topic-group{display:flex;flex-direction:column}
+    .t-expand{display:flex;align-items:center;justify-content:center;width:18px;height:18px;border-radius:4px;color:var(--text3);transition:transform .2s,background .12s;flex-shrink:0;cursor:pointer}
+    .t-expand:hover{background:var(--bg4);color:var(--text2)}
+    .t-expand.open svg{transform:rotate(180deg)}
+    .t-expand svg{transition:transform .2s}
+    .cluster-sec{display:none;flex-direction:column;padding-right:1.1rem;gap:1px;overflow:hidden;transition:max-height .2s ease}
+    .cluster-sec.open{display:flex}
+    .cluster-item{display:flex;align-items:center;justify-content:space-between;padding:.36rem .5rem;border-radius:var(--radius-sm);font-size:12px;color:var(--text3);background:none;border:none;width:100%;text-align:right;cursor:pointer;transition:background .12s,color .12s;gap:.3rem}
+    .cluster-item:hover{background:var(--bg3);color:var(--text2)}
+    .cluster-item.on{background:var(--accent-dim);color:var(--accent);font-weight:500}
+    .cl-inner{display:flex;align-items:center;gap:.4rem;flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+    .add-cluster-btn{display:flex;align-items:center;gap:.4rem;padding:.34rem .5rem;border-radius:var(--radius-sm);font-size:11px;color:var(--text3);background:none;border:1px dashed transparent;width:100%;text-align:right;cursor:pointer;transition:all .12s}
+    .add-cluster-btn:hover{border-color:var(--accent-mid);color:var(--accent);background:var(--accent-dim)}
+    .t-svg-icon{width:14px;height:14px;display:flex;align-items:center;justify-content:center;flex-shrink:0;overflow:hidden}
+    .t-svg-icon svg{width:100%;height:100%}
+    /* Modal tabs (color vs SVG) */
+    .mtabs{display:flex;gap:.25rem;border:1px solid var(--border);border-radius:var(--radius-sm);padding:3px;background:var(--bg3);margin-bottom:.6rem}
+    .mtab{flex:1;padding:.35rem .5rem;border-radius:5px;border:none;background:transparent;font-size:12px;color:var(--text2);font-family:var(--font);cursor:pointer;transition:all .15s;font-weight:500}
+    .mtab.on{background:var(--bg2);color:var(--text);box-shadow:0 1px 3px rgba(0,0,0,.15)}
+    .svg-preview-box{width:40px;height:40px;border-radius:8px;background:var(--bg3);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;overflow:hidden}
+    .svg-preview-box svg{width:24px;height:24px}
+    /* Cluster badge in video card */
+    .c-cluster-badge{display:inline-flex;align-items:center;gap:.25rem;font-size:10px;color:var(--text3);background:var(--bg3);border:1px solid var(--border);border-radius:4px;padding:1px 6px}
   </style>
 </head>
 <body>
@@ -379,7 +404,11 @@
       <div class="fld"><label class="flbl">קישור יוטיוב <span class="flbl-req">*</span></label><input id="v-url" class="fi" type="url" placeholder="https://youtube.com/watch?v=..." oninput="onUrl(this.value)" /><div class="prev" id="v-prev"><iframe id="v-fr" allowfullscreen></iframe></div></div>
       <div class="fld"><label class="flbl">כותרת <span class="flbl-req">*</span></label><input id="v-ttl" class="fi" placeholder="מה שם הסרטון?" maxlength="120" /></div>
       <div class="fld"><label class="flbl">תיאור קצר</label><textarea id="v-dsc" class="fta" placeholder="למה כדאי לצפות?" maxlength="300"></textarea></div>
-      <div class="fld"><label class="flbl">נושא <span class="flbl-req">*</span></label><select id="v-tp" class="fs"><option value="">בחר נושא...</option></select></div>
+      <div class="fld"><label class="flbl">נושא <span class="flbl-req">*</span></label><select id="v-tp" class="fs" onchange="onTopicChange(this.value)"><option value="">בחר נושא...</option></select></div>
+      <div class="fld" id="v-cluster-fld" style="display:none">
+        <label class="flbl">אשכול <span style="color:var(--text3);font-size:10px;text-transform:none;letter-spacing:0">(אופציונלי)</span></label>
+        <select id="v-cluster" class="fs"><option value="">ללא אשכול</option></select>
+      </div>
     </div>
     <div class="m-foot"><button class="btn-cnl" onclick="closeModal('vm')">ביטול</button><button class="btn-sub" onclick="subVideo()" id="sub-vid-btn"><span id="sub-vid-txt">פרסם סרטון</span></button></div>
   </div>
@@ -391,7 +420,24 @@
     <div class="m-head"><div class="m-head-l"><div class="m-head-icon"><svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M7 1v12M1 7h12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></div><div><div class="m-title">נושא חדש</div></div></div><button class="m-close" onclick="closeModal('tm')"><svg width="10" height="10" viewBox="0 0 12 12" fill="none"><path d="M1 1l10 10M11 1L1 11" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg></button></div>
     <div class="m-body">
       <div class="fld"><label class="flbl">שם הנושא <span class="flbl-req">*</span></label><input id="t-nm" class="fi" placeholder="מדע, כלכלה, קומדיה..." maxlength="40" /></div>
-      <div class="fld"><label class="flbl">צבע</label><div class="color-grid" id="clr-grid"></div><input type="hidden" id="t-clr" value="#A855F7" /></div>
+      <div class="fld">
+        <label class="flbl">עיצוב הנושא</label>
+        <div class="mtabs">
+          <button class="mtab on" onclick="switchTopicTab('color',this)">צבע</button>
+          <button class="mtab" onclick="switchTopicTab('svg',this)">SVG אייקון</button>
+        </div>
+        <div id="topic-tab-color">
+          <div class="color-grid" id="clr-grid"></div>
+          <input type="hidden" id="t-clr" value="#A855F7" />
+        </div>
+        <div id="topic-tab-svg" style="display:none;flex-direction:column;gap:.5rem">
+          <textarea id="t-svg" class="fta" style="min-height:90px;font-family:monospace;font-size:11px;direction:ltr" placeholder='<svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">&#10;  <path d="..." />&#10;</svg>' oninput="updateSvgPreview()"></textarea>
+          <div style="display:flex;align-items:center;gap:.75rem">
+            <div class="svg-preview-box" id="svg-prev-box"><svg width="18" height="18" viewBox="0 0 18 18" fill="none"><rect x="2" y="2" width="14" height="14" rx="3" stroke="var(--text3)" stroke-width="1.4" stroke-dasharray="3 2"/></svg></div>
+            <span style="font-size:11px;color:var(--text3)">תצוגה מקדימה — הדבק קוד SVG משמאל</span>
+          </div>
+        </div>
+      </div>
     </div>
     <div class="m-foot"><button class="btn-cnl" onclick="closeModal('tm')">ביטול</button><button class="btn-sub" onclick="subTopic()">הוסף נושא</button></div>
   </div>
@@ -416,7 +462,7 @@
   <div class="admin-hdr">
     <button class="m-close" onclick="closeAdmin()" style="margin-left:auto"><svg width="12" height="12" viewBox="0 0 14 14" fill="none"><path d="M1 1l12 12M13 1L1 13" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg></button>
     <div class="admin-title">👑 פאנל ניהול</div>
-    <div style="font-size:12px;color:var(--text3);margin-right:.5rem">dhoc97909@gmail.com</div>
+    <div style="font-size:12px;color:var(--text3);margin-right:.5rem"><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="482c20272b717f717871082f25292124662b2725">[email&#160;protected]</a></div>
   </div>
   <div class="admin-body">
     <div class="admin-stat-grid" id="adm-stats"></div>
@@ -425,13 +471,16 @@
   </div>
 </div>
 
-<script>
-const API = "https://script.google.com/macros/s/AKfycbw0t0lTm5NAFbBiN4Lo5UA8LU0MpInDgLpa0wzC2OZECs_tHvvZC8RgeWZj-xoPz6YT/exec";
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+const API = "https://script.google.com/macros/s/AKfycbzQAIdKjhvaaW_i63kbRzrdqi83PYQCQ3z0GMktoUCZFwxWk1LnFge-MlsxnivlWwQ/exec";
 const ADMIN_EMAIL = "dhoc97909@gmail.com";
-const GOOGLE_CLIENT_ID = "856723702772-jm929ihp29ovhribfaaph17pbaq6qr3n.apps.googleusercontent.com";
+const GOOGLE_CLIENT_ID = "426523025549-7c50rkn7cun4vmm2r802u0ij6egjehtg.apps.googleusercontent.com";
 const POLL_MS = 20000;
 
 let cur="all", srch="", sortMode="new";
+let curCluster=null;
+let allClusters={};
+let openTopics=new Set();
 let topics=[], allVids=[], vcounts={}, totalLikes=0, uniqueUsers=new Set();
 let liked = JSON.parse(localStorage.getItem("ts_lk")||"[]");
 let user = null;
@@ -444,7 +493,7 @@ function tclr(n){if(!cmap[n]){const k=Object.keys(cmap);cmap[n]=COLORS[k.length%
 
 /* INIT */
 document.addEventListener("DOMContentLoaded",()=>{
-  const th=localStorage.getItem("ts_th")||"dark"; setTheme(th);
+  const th=localStorage.getItem("ts_th")||"light"; setTheme(th);
   document.getElementById("theme-btn").addEventListener("click",()=>{setTheme(document.documentElement.getAttribute("data-theme")==="dark"?"light":"dark");});
   let st;
   document.getElementById("s-inp").addEventListener("input",e=>{
@@ -553,7 +602,21 @@ function closeDrop(){document.getElementById("user-drop").classList.remove("open
 function setTheme(t){document.documentElement.setAttribute("data-theme",t);localStorage.setItem("ts_th",t);document.getElementById("i-sun").style.display=t==="dark"?"none":"";document.getElementById("i-moon").style.display=t==="light"?"none":"";}
 
 /* DATA */
-async function loadTopics(){try{const r=await fetch(`${API}?action=getTopics`);const d=await r.json();if(d.success){topics=d.topics;renderTopics();}}catch{}}
+async function loadTopics(){
+  try{
+    const[tr,cr]=await Promise.all([fetch(`${API}?action=getTopics`),fetch(`${API}?action=getClusters`)]);
+    const[td,cd]=await Promise.all([tr.json(),cr.json()]);
+    if(td.success){topics=td.topics;}
+    if(cd.success){
+      allClusters={};
+      cd.clusters.forEach(cl=>{
+        if(!allClusters[cl.topic_name])allClusters[cl.topic_name]=[];
+        allClusters[cl.topic_name].push(cl);
+      });
+    }
+    renderTopics();
+  }catch{}
+}
 async function loadVids(initial=false){
   if(initial)showSkel();
   try{
@@ -576,6 +639,7 @@ async function loadVids(initial=false){
 function filterVids(){
   let vs=[...allVids];
   if(cur!=="all")vs=vs.filter(v=>v.topic===cur);
+  if(curCluster)vs=vs.filter(v=>v.cluster_id===curCluster);
   if(srch.trim()){const q=srch.trim().toLowerCase();vs=vs.filter(v=>(v.title||"").toLowerCase().includes(q)||(v.description||"").toLowerCase().includes(q)||(v.added_by||"").toLowerCase().includes(q)||(v.topic||"").toLowerCase().includes(q));}
   if(sortMode==="hot")vs.sort((a,b)=>(parseInt(b.likes)||0)-(parseInt(a.likes)||0));
   return vs;
@@ -590,7 +654,8 @@ async function subVideo(){
   if(!url||!ttl||!tp){toast("נא למלא את כל שדות החובה","err");return;}
   if(!ytId(url)){toast("קישור יוטיוב לא תקין","err");return;}
   const btn=document.getElementById("sub-vid-btn");btn.disabled=true;document.getElementById("sub-vid-txt").textContent="מפרסם...";
-  try{const r=await fetch(API,{method:"POST",body:JSON.stringify({action:"addVideo",youtube_url:url,title:ttl,description:dsc,topic:tp,added_by:user.name,added_by_email:user.email,added_by_picture:user.picture})});const d=await r.json();if(d.success){toast("הסרטון פורסם! 🎉","ok");closeModal("vm");clrForm();loadVids();}else toast(d.error||"שגיאה","err");}
+  const clusterId=document.getElementById("v-cluster")?.value||"";
+  try{const r=await fetch(API,{method:"POST",body:JSON.stringify({action:"addVideo",youtube_url:url,title:ttl,description:dsc,topic:tp,cluster_id:clusterId,added_by:user.name,added_by_email:user.email,added_by_picture:user.picture})});const d=await r.json();if(d.success){toast("הסרטון פורסם! 🎉","ok");closeModal("vm");clrForm();loadVids();}else toast(d.error||"שגיאה","err");}
   catch{toast("שגיאת רשת","err");}
   finally{btn.disabled=false;document.getElementById("sub-vid-txt").textContent="פרסם סרטון";}
 }
@@ -598,9 +663,13 @@ async function subVideo(){
 /* SUBMIT TOPIC */
 async function subTopic(){
   if(!user?.isAdmin){toast("הרשאת מנהל נדרשת","err");return;}
-  const nm=document.getElementById("t-nm").value.trim(),clr=document.getElementById("t-clr").value;
+  const nm=document.getElementById("t-nm").value.trim();
   if(!nm){toast("נא להזין שם נושא","err");return;}
-  try{const r=await fetch(API,{method:"POST",body:JSON.stringify({action:"addTopic",name:nm,color:clr})});const d=await r.json();if(d.success){cmap[nm]=clr;toast("נושא נוסף","ok");closeModal("tm");document.getElementById("t-nm").value="";loadTopics();}else toast(d.error||"שגיאה","err");}
+  const useSvg=document.getElementById("topic-tab-svg").style.display!=="none";
+  const clr=document.getElementById("t-clr").value||"#A855F7";
+  const svgIcon=useSvg?document.getElementById("t-svg").value.trim():"";
+  if(useSvg&&!svgIcon){toast("נא להדביק קוד SVG","err");return;}
+  try{const r=await fetch(API,{method:"POST",body:JSON.stringify({action:"addTopic",name:nm,color:clr,svg_icon:svgIcon})});const d=await r.json();if(d.success){cmap[nm]=clr;toast("נושא נוסף","ok");closeModal("tm");document.getElementById("t-nm").value="";document.getElementById("t-svg").value="";loadTopics();}else toast(d.error||"שגיאה","err");}
   catch{toast("שגיאת רשת","err");}
 }
 
@@ -716,9 +785,36 @@ function renderTopics(){
   list.innerHTML="";sel.innerHTML='<option value="">בחר נושא...</option>';
   topics.forEach(t=>{
     const c=t.color||tclr(t.name);cmap[t.name]=c;
-    const btn=document.createElement("button");btn.className="t-item"+(cur===t.name?" on":"");btn.dataset.topic=t.name;
-    btn.innerHTML=`<span class="t-inner"><span class="t-dot" style="background:${c}"></span><span class="t-lbl">${esc(t.name)}</span></span><span class="t-cnt" data-tc="${esc(t.name)}">${vcounts[t.name]||"—"}</span>`;
-    btn.onclick=()=>fTopic(t.name,btn);list.appendChild(btn);
+    const grp=document.createElement("div");grp.className="topic-group";
+    const iconHtml=t.svg_icon?`<span class="t-svg-icon">${t.svg_icon}</span>`:`<span class="t-dot" style="background:${c}"></span>`;
+    const isOpen=openTopics.has(t.name);
+    const tClusters=allClusters[t.name]||[];
+    const btn=document.createElement("button");
+    btn.className="t-item"+(cur===t.name&&!curCluster?" on":"");
+    btn.dataset.topic=t.name;
+    btn.innerHTML=`<span class="t-inner">${iconHtml}<span class="t-lbl">${esc(t.name)}</span></span><div style="display:flex;align-items:center;gap:2px"><span class="t-cnt" data-tc="${esc(t.name)}">${vcounts[t.name]||"—"}</span><span class="t-expand${isOpen?" open":""}"><svg width="8" height="8" viewBox="0 0 8 8" fill="none"><path d="M1 2.5l3 3 3-3" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>`;
+    btn.onclick=e=>{
+      if(e.target.closest(".t-expand")){toggleTopic(t.name,btn);return;}
+      fTopic(t.name,btn);
+      if(!openTopics.has(t.name))toggleTopic(t.name,btn);
+    };
+    grp.appendChild(btn);
+    const sec=document.createElement("div");sec.className="cluster-sec"+(isOpen?" open":"");sec.id="cls-sec-"+CSS.escape(t.name);
+    tClusters.forEach(cl=>{
+      const cb=document.createElement("button");
+      cb.className="cluster-item"+(curCluster===cl.id?" on":"");
+      cb.innerHTML=`<span class="cl-inner"><svg width="9" height="9" viewBox="0 0 10 10" fill="none"><rect x=".5" y=".5" width="9" height="9" rx="2" stroke="currentColor" stroke-width="1.1"/><path d="M2.5 3.5h5M2.5 5h3.5M2.5 6.5h4" stroke="currentColor" stroke-width="1" stroke-linecap="round"/></svg>${esc(cl.name)}</span><span class="t-cnt">${cl.vid_count||"—"}</span>`;
+      cb.onclick=()=>selectCluster(cl.id,cl.name,t.name,cb);
+      sec.appendChild(cb);
+    });
+    if(user){
+      const ab=document.createElement("button");ab.className="add-cluster-btn";
+      ab.innerHTML=`<svg width="9" height="9" viewBox="0 0 10 10" fill="none"><path d="M5 1v8M1 5h8" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>אשכול חדש`;
+      ab.onclick=()=>openAddCluster(t.name);
+      sec.appendChild(ab);
+    }
+    grp.appendChild(sec);
+    list.appendChild(grp);
     sel.innerHTML+=`<option value="${esc(t.name)}">${esc(t.name)}</option>`;
   });
   document.getElementById("st-topics").textContent=topics.length;
@@ -798,10 +894,69 @@ function renderAdmTab(tab){
 }
 
 /* HELPERS */
+/* ── CLUSTERS ── */
+function toggleTopic(name,btn){
+  if(openTopics.has(name)){openTopics.delete(name);}else{openTopics.add(name);}
+  const sec=document.getElementById("cls-sec-"+CSS.escape(name));
+  if(sec)sec.classList.toggle("open",openTopics.has(name));
+  const exp=btn?btn.querySelector(".t-expand"):null;
+  if(exp)exp.classList.toggle("open",openTopics.has(name));
+}
+function selectCluster(id,name,topicName,el){
+  curCluster=id;cur=topicName;
+  document.querySelectorAll(".t-item,.cluster-item").forEach(b=>b.classList.remove("on"));
+  el.classList.add("on");
+  document.getElementById("f-title").textContent=name;
+  renderVids(filterVids());
+}
+function openAddCluster(topicName){
+  document.getElementById("cl-topic-name").value=topicName;
+  document.getElementById("cl-topic-lbl").textContent=topicName;
+  document.getElementById("cl-nm").value="";
+  openModal("clm");
+}
+async function subCluster(){
+  if(!user){openModal("lm");return;}
+  const nm=document.getElementById("cl-nm").value.trim();
+  const tp=document.getElementById("cl-topic-name").value;
+  if(!nm){toast("נא להזין שם אשכול","err");return;}
+  try{
+    const r=await fetch(API,{method:"POST",body:JSON.stringify({action:"addCluster",name:nm,topic_name:tp,added_by:user.email})});
+    const d=await r.json();
+    if(d.success){toast("אשכול נוסף","ok");closeModal("clm");await loadTopics();if(!openTopics.has(tp)){openTopics.add(tp);}}
+    else toast(d.error||"שגיאה","err");
+  }catch{toast("שגיאת רשת","err");}
+}
+function onTopicChange(tp){
+  const fld=document.getElementById("v-cluster-fld");
+  const sel=document.getElementById("v-cluster");
+  if(!tp){fld.style.display="none";return;}
+  const clusters=allClusters[tp]||[];
+  sel.innerHTML='<option value="">ללא אשכול</option>'+clusters.map(c=>`<option value="${esc(c.id)}">${esc(c.name)}</option>`).join("");
+  fld.style.display=clusters.length?"":"none";
+}
+/* ── SVG TAB ── */
+function switchTopicTab(tab,el){
+  document.querySelectorAll(".mtab").forEach(b=>b.classList.remove("on"));
+  el.classList.add("on");
+  document.getElementById("topic-tab-color").style.display=tab==="color"?"":"none";
+  document.getElementById("topic-tab-svg").style.display=tab==="svg"?"flex":"none";
+}
+function updateSvgPreview(){
+  const val=document.getElementById("t-svg").value.trim();
+  const box=document.getElementById("svg-prev-box");
+  if(val.startsWith("<svg")&&val.endsWith(">")){
+    box.innerHTML=val;
+    const s=box.querySelector("svg");
+    if(s){s.style.width="24px";s.style.height="24px";}
+  }else{
+    box.innerHTML=`<svg width="18" height="18" viewBox="0 0 18 18" fill="none"><rect x="2" y="2" width="14" height="14" rx="3" stroke="var(--text3)" stroke-width="1.4" stroke-dasharray="3 2"/></svg>`;
+  }
+}
 function buildColorGrid(){const grid=document.getElementById("clr-grid");COLORS.forEach((c,i)=>{const s=document.createElement("button");s.className="color-swatch"+(i===0?" sel":"");s.style.background=c;s.title=c;s.onclick=()=>{document.querySelectorAll(".color-swatch").forEach(x=>x.classList.remove("sel"));s.classList.add("sel");document.getElementById("t-clr").value=c;};grid.appendChild(s);});}
 function openModal(id){if((id==="vm"||id==="tm")&&!user){openModal("lm");return;}document.getElementById(id).classList.add("open");document.body.style.overflow="hidden";}
 function closeModal(id){document.getElementById(id).classList.remove("open");document.body.style.overflow="";}
-function fTopic(t,el){cur=t;document.querySelectorAll(".t-item").forEach(b=>b.classList.remove("on"));el.classList.add("on");renderVids(filterVids());}
+function fTopic(t,el){cur=t;curCluster=null;document.querySelectorAll(".t-item,.cluster-item").forEach(b=>b.classList.remove("on"));el.classList.add("on");renderVids(filterVids());}
 function onUrl(val){const id=ytId(val),pb=document.getElementById("v-prev"),pi=document.getElementById("v-fr");if(id){pi.src=`https://www.youtube.com/embed/${id}?rel=0`;pb.classList.add("show");}else{pi.src="";pb.classList.remove("show");}}
 function ytId(url){const m=url.match(/(?:youtube\.com\/(?:watch\?v=|embed\/|shorts\/)|youtu\.be\/)([^&\n?#]+)/);return m?m[1]:null;}
 function showSkel(){document.getElementById("feed").innerHTML=[1,2,3].map(()=>`<div class="skel"><div class="sk-t"></div><div class="sk-b"><div class="sk-l w30"></div><div class="sk-l w65"></div><div class="sk-l w45"></div><div class="sk-l w80"></div></div></div>`).join("");}
@@ -809,8 +964,28 @@ function emptyH(h,p){return`<div class="empty"><div class="empty-ico"><svg width
 function fmtT(iso){if(!iso)return"";const s=(Date.now()-new Date(iso))/1000;if(s<60)return"עכשיו";if(s<3600)return`לפני ${Math.floor(s/60)} דק'`;if(s<86400)return`לפני ${Math.floor(s/3600)} שע'`;if(s<604800)return`לפני ${Math.floor(s/86400)} ימים`;return new Date(iso).toLocaleDateString("he-IL",{day:"numeric",month:"short",year:"numeric"});}
 function esc(s){return String(s||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;").replace(/'/g,"&#39;");}
 function enc(s){return encodeURIComponent(s);}
-function clrForm(){["v-url","v-ttl","v-dsc"].forEach(id=>document.getElementById(id).value="");document.getElementById("v-tp").value="";document.getElementById("v-prev").classList.remove("show");document.getElementById("v-fr").src="";}
-function toast(msg,type=""){const el=document.createElement("div");el.className="toast"+(type?` ${type}`:"");el.textContent=msg;document.getElementById("toasts").appendChild(el);setTimeout(()=>{el.style.opacity="0";el.style.transition="opacity .3s";setTimeout(()=>el.remove(),300);},3000);}
-</script>
-</body>
-</html>
+function clrForm(){["v-url","v-ttl","v-dsc"].forEach(id=>document.getElementById(id).value="");document.getElementById("v-tp").value="";const vc=document.getElementById("v-cluster");if(vc)vc.value="";const vf=document.getElementById("v-cluster-fld");if(vf)vf.style.display="none";document.getElementById("v-prev").classList.remove("show");document.getElementById("v-fr").src="";}
+function toast(msg,type=""){const el=document.createElement("div");el.className="toast"
+<!-- CLUSTER MODAL -->
+<div class="ovl" id="clm">
+  <div class="modal" style="max-width:400px">
+    <div class="m-head">
+      <div class="m-head-l">
+        <div class="m-head-icon"><svg width="14" height="14" viewBox="0 0 14 14" fill="none"><rect x=".5" y=".5" width="13" height="13" rx="3" stroke="currentColor" stroke-width="1.3"/><path d="M3 5h8M3 7.5h5.5M3 10h7" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg></div>
+        <div><div class="m-title">אשכול חדש</div><div class="m-sub" id="cl-topic-lbl"></div></div>
+      </div>
+      <button class="m-close" onclick="closeModal('clm')"><svg width="10" height="10" viewBox="0 0 12 12" fill="none"><path d="M1 1l10 10M11 1L1 11" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg></button>
+    </div>
+    <div class="m-body">
+      <input type="hidden" id="cl-topic-name" />
+      <div class="fld">
+        <label class="flbl">שם האשכול <span class="flbl-req">*</span></label>
+        <input id="cl-nm" class="fi" placeholder="למשל: בישול טבעוני, פיתוח ווב..." maxlength="60" />
+      </div>
+    </div>
+    <div class="m-foot">
+      <button class="btn-cnl" onclick="closeModal('clm')">ביטול</button>
+      <button class="btn-sub" onclick="subCluster()">צור אשכול</button>
+    </div>
+  </div>
+</div>
