@@ -384,6 +384,71 @@
     .act-btn.del-btn{color:var(--text3)}
     .act-btn.del-btn:hover{color:var(--red);border-color:var(--red-dim);background:var(--red-dim)}
 
+    /* ══ VIDEO LIGHTBOX ══ */
+    .vl-ovl{
+      position:fixed;inset:0;z-index:700;
+      background:rgba(0,0,0,.85);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);
+      display:flex;align-items:center;justify-content:center;padding:1rem;
+      opacity:0;pointer-events:none;transition:opacity .22s;
+    }
+    .vl-ovl.open{opacity:1;pointer-events:all}
+    .vl-wrap{
+      width:100%;max-width:860px;
+      display:flex;flex-direction:column;gap:0;
+      transform:translateY(18px) scale(.97);
+      transition:transform .25s cubic-bezier(.16,1,.3,1);
+    }
+    .vl-ovl.open .vl-wrap{transform:translateY(0) scale(1)}
+    .vl-video{
+      position:relative;padding-bottom:56.25%;
+      border-radius:14px 14px 0 0;overflow:hidden;
+      background:#000;box-shadow:0 0 60px rgba(0,0,0,.8);
+    }
+    .vl-video iframe{position:absolute;inset:0;width:100%;height:100%;border:none}
+    .vl-info{
+      background:var(--bg2);border:1px solid var(--border);border-top:none;
+      border-radius:0 0 14px 14px;
+      padding:1rem 1.3rem;
+      display:flex;align-items:flex-start;justify-content:space-between;gap:1rem;
+    }
+    .vl-info-l{flex:1;min-width:0;display:flex;flex-direction:column;gap:.3rem}
+    .vl-cat{display:inline-flex;align-items:center;gap:.3rem;font-size:11px;font-weight:600;border-radius:5px;padding:2px 8px;margin-bottom:.1rem}
+    .vl-title{font-family:var(--font-d);font-size:1.1rem;font-weight:700;color:var(--text);line-height:1.35}
+    .vl-desc{font-size:13px;color:var(--text2);line-height:1.6;margin-top:.1rem}
+    .vl-author{display:flex;align-items:center;gap:.5rem;font-size:12px;color:var(--text3);margin-top:.4rem}
+    .vl-info-r{display:flex;align-items:center;gap:.4rem;flex-shrink:0}
+    .vl-close{
+      position:fixed;top:1rem;left:1rem;
+      width:36px;height:36px;border-radius:50%;
+      background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.15);
+      color:#fff;display:flex;align-items:center;justify-content:center;
+      transition:all .15s;cursor:pointer;z-index:1;
+    }
+    .vl-close:hover{background:rgba(255,255,255,.2)}
+
+    /* ── Thumbnail card (replaces inline iframe) ── */
+    .c-thumb{position:relative;background:var(--bg3);overflow:hidden;cursor:pointer}
+    .c-thumb-img{
+      position:absolute;inset:0;width:100%;height:100%;
+      object-fit:cover;transition:transform .3s ease,filter .3s ease;
+    }
+    .c-thumb-overlay{
+      position:absolute;inset:0;
+      background:linear-gradient(135deg,rgba(0,0,0,.35),rgba(0,0,0,.1));
+      display:flex;align-items:center;justify-content:center;
+      transition:background .2s;
+    }
+    .c-thumb:hover .c-thumb-img{transform:scale(1.05);filter:brightness(.85)}
+    .c-thumb:hover .c-thumb-overlay{background:linear-gradient(135deg,rgba(0,0,0,.5),rgba(0,0,0,.25))}
+    .c-play-btn{
+      width:42px;height:42px;border-radius:50%;
+      background:rgba(168,85,247,.92);
+      display:flex;align-items:center;justify-content:center;
+      transition:transform .2s,background .2s;
+      box-shadow:0 4px 20px rgba(168,85,247,.5);
+    }
+    .c-thumb:hover .c-play-btn{transform:scale(1.1);background:var(--accent)}
+
     /* ══ SKELETON ══ */
     @keyframes shim{0%{background-position:-600px 0}100%{background-position:600px 0}}
     .skel{
@@ -974,6 +1039,42 @@
   </div>
 </div>
 
+<!-- VIDEO LIGHTBOX -->
+<div class="vl-ovl" id="vl">
+  <button class="vl-close" onclick="closeVideo()">
+    <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M1 1l10 10M11 1L1 11" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+  </button>
+  <div class="vl-wrap">
+    <div class="vl-video">
+      <iframe id="vl-fr" allowfullscreen allow="accelerometer;autoplay;clipboard-write;encrypted-media;gyroscope;picture-in-picture"></iframe>
+    </div>
+    <div class="vl-info">
+      <div class="vl-info-l">
+        <span class="vl-cat" id="vl-cat"></span>
+        <div class="vl-title" id="vl-title"></div>
+        <div class="vl-desc" id="vl-desc"></div>
+        <div class="vl-author">
+          <div class="ava" id="vl-ava"></div>
+          <span id="vl-by"></span>
+          <span id="vl-time"></span>
+        </div>
+      </div>
+      <div class="vl-info-r">
+        <button class="act-btn" id="vl-like-btn" onclick="vlLike()">
+          <svg width="14" height="14" viewBox="0 0 14 13" fill="none" id="vl-heart">
+            <path d="M7 12S1 8.2 1 4.5C1 2.6 2.6 1 4.5 1c.9 0 1.8.38 2.5 1 .7-.62 1.6-1 2.5-1C11.4 1 13 2.6 13 4.5 13 8.2 7 12 7 12z" stroke="currentColor" stroke-width="1.25"/>
+          </svg>
+          <span id="vl-likes">0</span>
+        </button>
+        <a id="vl-yt-link" href="#" target="_blank" rel="noopener" class="act-btn" title="פתח ביוטיוב">
+          <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><rect x="1" y="1" width="14" height="14" rx="4" stroke="currentColor" stroke-width="1.3"/><path d="M6 5l5 3-5 3V5z" fill="currentColor"/></svg>
+          יוטיוב
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
+
 <!-- TOAST container -->
 <div id="toasts"></div>
 
@@ -1003,7 +1104,7 @@
 ═══════════════════════════════════════════════ */
 const API       = "https://script.google.com/macros/s/AKfycbw0t0lTm5NAFbBiN4Lo5UA8LU0MpInDgLpa0wzC2OZECs_tHvvZC8RgeWZj-xoPz6YT/exec";
 const ADMIN_EMAIL = "dhoc97909@gmail.com";
-const GOOGLE_CLIENT_ID = "426523025549-7c50rkn7cun4vmm2r802u0ij6egjehtg.apps.googleusercontent.com";
+const GOOGLE_CLIENT_ID = "856723702772-jm929ihp29ovhribfaaph17pbaq6qr3n.apps.googleusercontent.com";
 
 /* ═══════════════════════════════════════════════
    STATE
@@ -1047,6 +1148,16 @@ document.addEventListener("DOMContentLoaded", () => {
     const v = e.target.value;
     document.getElementById("srch-clear").style.display = v ? "" : "none";
     st = setTimeout(() => { srch = v; renderVids(filterVids()); }, 350);
+  });
+
+  // Close lightbox on outside click or ESC
+  document.getElementById("vl").addEventListener("click", e => {
+    if (e.target === document.getElementById("vl")) closeVideo();
+  });
+  document.addEventListener("keydown", e => {
+    if (e.key === "Escape") {
+      if (document.getElementById("vl").classList.contains("open")) closeVideo();
+    }
   });
 
   // Close dropdowns on outside click
@@ -1418,11 +1529,16 @@ function renderVids(vs) {
       avaHtml = `<div class="ava" style="background:${c}20;border-color:${c}40;color:${c}">${esc((v.added_by||"?")[0].toUpperCase())}</div>`;
     }
     return `<div class="card" style="animation-delay:${i*.04}s">
-      <div class="c-thumb">
+      <div class="c-thumb" onclick="openVideo(${JSON.stringify(v).replace(/"/g,'&quot;')})">
         <div class="c-ratio">
-          <iframe src="https://www.youtube.com/embed/${esc(v.video_id)}?rel=0&modestbranding=1"
-            allow="accelerometer;autoplay;clipboard-write;encrypted-media;gyroscope;picture-in-picture"
-            allowfullscreen loading="lazy" title="${esc(v.title)}"></iframe>
+          <img class="c-thumb-img" src="https://img.youtube.com/vi/${esc(v.video_id)}/mqdefault.jpg" alt="${esc(v.title)}" loading="lazy">
+          <div class="c-thumb-overlay">
+            <div class="c-play-btn">
+              <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+                <path d="M4 2.5l8 4.5-8 4.5V2.5z" fill="white"/>
+              </svg>
+            </div>
+          </div>
         </div>
         ${isNew ? '<span class="c-new-badge">חדש</span>' : ""}
       </div>
@@ -1433,7 +1549,7 @@ function renderVids(vs) {
             ${esc(v.topic)}
           </span>
         </div>
-        <div class="c-title">${esc(v.title)}</div>
+        <div class="c-title" style="cursor:pointer" onclick="openVideo(${JSON.stringify(v).replace(/"/g,'&quot;')})">${esc(v.title)}</div>
         ${v.description ? `<div class="c-desc">${esc(v.description)}</div>` : ""}
         <div class="c-foot">
           <div class="c-author">
@@ -1460,8 +1576,84 @@ function renderVids(vs) {
 }
 
 /* ═══════════════════════════════════════════════
-   ADMIN PANEL
+   VIDEO LIGHTBOX
 ═══════════════════════════════════════════════ */
+let vlCurrentVideo = null;
+
+function openVideo(v) {
+  vlCurrentVideo = v;
+  const c = cmap[v.topic] || tclr(v.topic);
+  const lk = liked.includes(v.id);
+
+  // iframe with autoplay
+  document.getElementById("vl-fr").src =
+    `https://www.youtube.com/embed/${v.video_id}?rel=0&modestbranding=1&autoplay=1`;
+
+  // Category badge
+  const catEl = document.getElementById("vl-cat");
+  catEl.textContent = v.topic;
+  catEl.style.cssText = `background:${c}20;color:${c};border:1px solid ${c}40`;
+
+  // Title & desc
+  document.getElementById("vl-title").textContent = v.title;
+  const descEl = document.getElementById("vl-desc");
+  descEl.textContent = v.description || "";
+  descEl.style.display = v.description ? "" : "none";
+
+  // Author
+  const avaEl = document.getElementById("vl-ava");
+  if (v.added_by_picture) {
+    avaEl.innerHTML = `<img src="${esc(v.added_by_picture)}" alt="" style="width:100%;height:100%;object-fit:cover;border-radius:50%">`;
+  } else {
+    avaEl.textContent = (v.added_by||"?")[0].toUpperCase();
+    avaEl.style.cssText = `background:${c}20;border-color:${c}40;color:${c}`;
+  }
+  document.getElementById("vl-by").textContent = v.added_by || "אנונימי";
+  document.getElementById("vl-time").textContent = "· " + fmtT(v.timestamp);
+
+  // Like
+  document.getElementById("vl-likes").textContent = v.likes || 0;
+  const likeBtn = document.getElementById("vl-like-btn");
+  likeBtn.classList.toggle("lkd", lk);
+  document.getElementById("vl-heart").setAttribute("fill", lk ? "currentColor" : "none");
+
+  // YT link
+  document.getElementById("vl-yt-link").href = `https://www.youtube.com/watch?v=${v.video_id}`;
+
+  // Open
+  document.getElementById("vl").classList.add("open");
+  document.body.style.overflow = "hidden";
+}
+
+function closeVideo() {
+  document.getElementById("vl").classList.remove("open");
+  document.getElementById("vl-fr").src = ""; // stop playback
+  document.body.style.overflow = "";
+  vlCurrentVideo = null;
+}
+
+async function vlLike() {
+  if (!vlCurrentVideo) return;
+  if (!user) { closeVideo(); openModal("lm"); return; }
+  const id = vlCurrentVideo.id;
+  if (liked.includes(id)) { toast("כבר לייקת סרטון זה 💜"); return; }
+  const btn = document.getElementById("vl-like-btn");
+  btn.classList.add("lkd");
+  document.getElementById("vl-heart").setAttribute("fill","currentColor");
+  try {
+    const r = await fetch(`${API}?action=like&id=${id}&email=${enc(user.email)}`);
+    const d = await r.json();
+    if (d.success) {
+      liked.push(id); localStorage.setItem("ts_lk", JSON.stringify(liked));
+      document.getElementById("vl-likes").textContent = d.likes;
+      // sync card in feed
+      const cardBtn = document.querySelector(`[data-vid="${id}"] .act-btn`);
+      if (cardBtn) { cardBtn.classList.add("lkd"); cardBtn.querySelector(".lc").textContent = d.likes; }
+    } else { btn.classList.remove("lkd"); document.getElementById("vl-heart").setAttribute("fill","none"); }
+  } catch { btn.classList.remove("lkd"); document.getElementById("vl-heart").setAttribute("fill","none"); }
+}
+
+
 let admCurrentTab = "videos";
 function openAdmin() {
   if (!user?.isAdmin) return;
