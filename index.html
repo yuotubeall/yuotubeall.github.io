@@ -1,0 +1,1068 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TubeShare – שיתוף סרטונים לפי נושאים</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;700;900&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet" />
+
+  <style>
+    /* ============================================================
+       🎨 CSS VARIABLES & RESET
+       כל הצבעים והמשתנים מוגדרים כאן – שינוי מרכזי אחד ישפיע
+       על כל האתר. עיצוב: Dark editorial עם אדום יוטיוב כ-accent
+    ============================================================ */
+    :root {
+      --bg:         #0d0d0d;
+      --surface:    #161616;
+      --surface2:   #1e1e1e;
+      --border:     #2a2a2a;
+      --red:        #ff2d2d;
+      --red-dim:    rgba(255, 45, 45, 0.15);
+      --text:       #f0f0f0;
+      --text-dim:   #888;
+      --text-muted: #444;
+      --radius:     12px;
+      --radius-sm:  8px;
+      --font:       'Heebo', sans-serif;
+      --font-mono:  'Space Mono', monospace;
+      --transition: 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+      --shadow:     0 8px 32px rgba(0,0,0,0.5);
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: var(--font);
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* ============================================================
+       BACKGROUND TEXTURE – נותן עומק לרקע
+    ============================================================ */
+    body::before {
+      content: '';
+      position: fixed; inset: 0;
+      background:
+        radial-gradient(ellipse 80% 50% at 20% 0%, rgba(255,45,45,0.06) 0%, transparent 60%),
+        radial-gradient(ellipse 60% 40% at 80% 100%, rgba(255,45,45,0.04) 0%, transparent 60%);
+      pointer-events: none; z-index: 0;
+    }
+
+    /* ============================================================
+       HEADER – סרגל הניווט העליון
+    ============================================================ */
+    header {
+      position: sticky; top: 0; z-index: 100;
+      background: rgba(13,13,13,0.92);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--border);
+      padding: 0 2rem;
+    }
+
+    .header-inner {
+      max-width: 1400px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 64px;
+      gap: 1.5rem;
+    }
+
+    .logo {
+      display: flex; align-items: center; gap: 0.5rem;
+      font-family: var(--font-mono);
+      font-size: 1.1rem; font-weight: 700;
+      color: var(--text); text-decoration: none;
+      flex-shrink: 0;
+    }
+
+    .logo span { color: var(--red); }
+
+    .logo-icon {
+      width: 32px; height: 32px;
+      background: var(--red);
+      border-radius: 8px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1rem;
+    }
+
+    /* שדה חיפוש */
+    .search-bar {
+      flex: 1; max-width: 480px;
+      position: relative;
+    }
+
+    .search-bar input {
+      width: 100%;
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 100px;
+      padding: 0.55rem 1.2rem 0.55rem 3rem;
+      color: var(--text);
+      font-family: var(--font);
+      font-size: 0.9rem;
+      outline: none;
+      transition: border-color var(--transition);
+      direction: rtl;
+    }
+
+    .search-bar input:focus { border-color: var(--red); }
+    .search-bar input::placeholder { color: var(--text-muted); }
+
+    .search-icon {
+      position: absolute; left: 1rem; top: 50%;
+      transform: translateY(-50%);
+      color: var(--text-muted); font-size: 0.9rem;
+      pointer-events: none;
+    }
+
+    .btn {
+      display: inline-flex; align-items: center; gap: 0.4rem;
+      padding: 0.55rem 1.2rem;
+      border-radius: var(--radius-sm);
+      font-family: var(--font);
+      font-size: 0.9rem; font-weight: 500;
+      cursor: pointer; border: none;
+      transition: all var(--transition);
+      white-space: nowrap;
+    }
+
+    .btn-primary {
+      background: var(--red); color: white;
+    }
+    .btn-primary:hover { background: #ff4444; transform: translateY(-1px); }
+
+    .btn-ghost {
+      background: transparent;
+      border: 1px solid var(--border);
+      color: var(--text-dim);
+    }
+    .btn-ghost:hover { border-color: var(--red); color: var(--red); }
+
+    /* ============================================================
+       TOPICS BAR – פס הנושאים/קטגוריות
+    ============================================================ */
+    .topics-bar {
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      padding: 0 2rem;
+      position: relative; z-index: 1;
+    }
+
+    .topics-inner {
+      max-width: 1400px; margin: 0 auto;
+      display: flex; align-items: center; gap: 0.5rem;
+      overflow-x: auto; padding: 0.75rem 0;
+      scrollbar-width: none;
+    }
+    .topics-inner::-webkit-scrollbar { display: none; }
+
+    .topic-chip {
+      display: inline-flex; align-items: center; gap: 0.35rem;
+      padding: 0.4rem 1rem;
+      border-radius: 100px;
+      font-size: 0.85rem; font-weight: 500;
+      cursor: pointer;
+      border: 1px solid var(--border);
+      background: transparent;
+      color: var(--text-dim);
+      transition: all var(--transition);
+      white-space: nowrap;
+      font-family: var(--font);
+    }
+
+    .topic-chip:hover { border-color: var(--red); color: var(--red); }
+
+    .topic-chip.active {
+      background: var(--red-dim);
+      border-color: var(--red);
+      color: var(--red);
+    }
+
+    /* ============================================================
+       MAIN LAYOUT
+    ============================================================ */
+    main {
+      max-width: 1400px; margin: 0 auto;
+      padding: 2rem;
+      position: relative; z-index: 1;
+    }
+
+    /* Stats bar */
+    .stats-bar {
+      display: flex; align-items: center;
+      justify-content: space-between;
+      margin-bottom: 1.5rem;
+      flex-wrap: wrap; gap: 1rem;
+    }
+
+    .stats-text {
+      color: var(--text-dim);
+      font-size: 0.85rem;
+    }
+    .stats-text strong { color: var(--text); }
+
+    /* ============================================================
+       VIDEO GRID – רשת הכרטיסיות
+    ============================================================ */
+    .video-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 1.5rem;
+    }
+
+    /* כרטיסיית סרטון בודד */
+    .video-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+      transition: all var(--transition);
+      animation: fadeInUp 0.4s ease both;
+    }
+
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .video-card:hover {
+      border-color: #333;
+      transform: translateY(-4px);
+      box-shadow: var(--shadow);
+    }
+
+    /* מיכל ה-iframe של יוטיוב */
+    .video-embed {
+      position: relative;
+      padding-bottom: 56.25%; /* יחס 16:9 */
+      background: #000;
+      overflow: hidden;
+    }
+
+    .video-embed iframe {
+      position: absolute; inset: 0;
+      width: 100%; height: 100%;
+      border: none;
+    }
+
+    /* תוכן הכרטיסייה */
+    .video-body {
+      padding: 1rem;
+    }
+
+    .video-topic-tag {
+      display: inline-flex; align-items: center; gap: 0.3rem;
+      font-size: 0.75rem; font-weight: 500;
+      color: var(--red);
+      background: var(--red-dim);
+      padding: 0.2rem 0.6rem;
+      border-radius: 100px;
+      margin-bottom: 0.6rem;
+    }
+
+    .video-title {
+      font-size: 0.95rem; font-weight: 700;
+      color: var(--text);
+      line-height: 1.4;
+      margin-bottom: 0.4rem;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+
+    .video-desc {
+      font-size: 0.8rem;
+      color: var(--text-dim);
+      line-height: 1.5;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+      margin-bottom: 0.8rem;
+    }
+
+    .video-footer {
+      display: flex; align-items: center;
+      justify-content: space-between;
+      padding-top: 0.75rem;
+      border-top: 1px solid var(--border);
+    }
+
+    .video-meta {
+      display: flex; align-items: center; gap: 0.5rem;
+      font-size: 0.78rem; color: var(--text-muted);
+    }
+
+    .avatar {
+      width: 26px; height: 26px;
+      border-radius: 50%;
+      background: var(--red-dim);
+      border: 1px solid var(--red);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.7rem; font-weight: 700; color: var(--red);
+    }
+
+    .like-btn {
+      display: flex; align-items: center; gap: 0.3rem;
+      background: none; border: 1px solid var(--border);
+      color: var(--text-muted);
+      padding: 0.3rem 0.7rem;
+      border-radius: 100px;
+      font-size: 0.8rem;
+      cursor: pointer;
+      font-family: var(--font);
+      transition: all var(--transition);
+    }
+
+    .like-btn:hover, .like-btn.liked {
+      border-color: var(--red);
+      color: var(--red);
+      background: var(--red-dim);
+    }
+
+    .time-text {
+      font-size: 0.75rem; color: var(--text-muted);
+      font-family: var(--font-mono);
+    }
+
+    /* ============================================================
+       EMPTY STATE
+    ============================================================ */
+    .empty-state {
+      text-align: center; padding: 5rem 2rem;
+      grid-column: 1 / -1;
+    }
+    .empty-icon { font-size: 3.5rem; margin-bottom: 1rem; }
+    .empty-state h3 { font-size: 1.2rem; color: var(--text); margin-bottom: 0.5rem; }
+    .empty-state p  { color: var(--text-dim); font-size: 0.9rem; }
+
+    /* ============================================================
+       LOADING STATE
+    ============================================================ */
+    .skeleton {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+      animation: pulse 1.5s ease infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50%       { opacity: 0.5; }
+    }
+
+    .skeleton-video { padding-bottom: 56.25%; background: var(--surface2); }
+    .skeleton-line  {
+      height: 12px; background: var(--surface2);
+      border-radius: 4px; margin: 1rem 1rem 0.5rem;
+    }
+    .skeleton-line.short { width: 60%; }
+    .skeleton-line.shorter { width: 40%; margin-bottom: 1rem; }
+
+    /* ============================================================
+       MODAL – טופס הוספת סרטון
+    ============================================================ */
+    .modal-overlay {
+      position: fixed; inset: 0;
+      background: rgba(0,0,0,0.8);
+      backdrop-filter: blur(8px);
+      z-index: 1000;
+      display: flex; align-items: center; justify-content: center;
+      padding: 1rem;
+      opacity: 0; pointer-events: none;
+      transition: opacity var(--transition);
+    }
+
+    .modal-overlay.open {
+      opacity: 1; pointer-events: all;
+    }
+
+    .modal {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: calc(var(--radius) * 1.5);
+      width: 100%; max-width: 520px;
+      padding: 2rem;
+      transform: translateY(20px) scale(0.97);
+      transition: transform var(--transition);
+      box-shadow: 0 24px 64px rgba(0,0,0,0.6);
+    }
+
+    .modal-overlay.open .modal {
+      transform: translateY(0) scale(1);
+    }
+
+    .modal-header {
+      display: flex; align-items: center;
+      justify-content: space-between;
+      margin-bottom: 1.5rem;
+    }
+
+    .modal-title {
+      font-size: 1.2rem; font-weight: 700;
+    }
+
+    .modal-close {
+      background: none; border: none;
+      color: var(--text-dim); font-size: 1.4rem;
+      cursor: pointer; line-height: 1;
+      transition: color var(--transition);
+    }
+    .modal-close:hover { color: var(--red); }
+
+    /* שדות הטופס */
+    .form-group { margin-bottom: 1.2rem; }
+
+    .form-label {
+      display: block;
+      font-size: 0.82rem; font-weight: 500;
+      color: var(--text-dim);
+      margin-bottom: 0.4rem;
+    }
+
+    .form-input, .form-select, .form-textarea {
+      width: 100%;
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 0.65rem 0.9rem;
+      color: var(--text);
+      font-family: var(--font);
+      font-size: 0.9rem;
+      outline: none;
+      transition: border-color var(--transition);
+      direction: rtl;
+    }
+
+    .form-input:focus,
+    .form-select:focus,
+    .form-textarea:focus { border-color: var(--red); }
+
+    .form-textarea { resize: vertical; min-height: 80px; }
+
+    .form-select option { background: var(--surface2); }
+
+    /* תצוגה מקדימה של הסרטון */
+    .preview-embed {
+      position: relative; padding-bottom: 56.25%;
+      background: #000; border-radius: var(--radius-sm);
+      overflow: hidden; margin-top: 0.8rem;
+      display: none;
+    }
+    .preview-embed.visible { display: block; }
+    .preview-embed iframe {
+      position: absolute; inset: 0;
+      width: 100%; height: 100%; border: none;
+    }
+
+    /* ============================================================
+       USERNAME MODAL
+    ============================================================ */
+    .username-modal {
+      text-align: center;
+    }
+    .username-modal .modal-icon {
+      font-size: 3rem; margin-bottom: 0.5rem;
+    }
+    .username-modal h2 { margin-bottom: 0.3rem; }
+    .username-modal p { color: var(--text-dim); font-size: 0.9rem; margin-bottom: 1.5rem; }
+
+    /* ============================================================
+       TOAST NOTIFICATIONS
+    ============================================================ */
+    #toast-container {
+      position: fixed; bottom: 2rem; left: 50%;
+      transform: translateX(-50%);
+      z-index: 9999;
+      display: flex; flex-direction: column; gap: 0.5rem;
+      align-items: center;
+    }
+
+    .toast {
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 100px;
+      padding: 0.6rem 1.4rem;
+      font-size: 0.85rem; color: var(--text);
+      animation: toastIn 0.3s ease;
+      box-shadow: var(--shadow);
+    }
+
+    .toast.success { border-color: #22c55e; color: #22c55e; }
+    .toast.error   { border-color: var(--red); color: var(--red); }
+
+    @keyframes toastIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ============================================================
+       RESPONSIVE
+    ============================================================ */
+    @media (max-width: 768px) {
+      .header-inner { padding: 0; }
+      main { padding: 1rem; }
+      .video-grid { grid-template-columns: 1fr; }
+      .search-bar { max-width: 200px; }
+      header { padding: 0 1rem; }
+      .topics-bar { padding: 0 1rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ============================================================
+       HEADER
+  ============================================================ -->
+  <header>
+    <div class="header-inner">
+      <a href="#" class="logo">
+        <div class="logo-icon">▶</div>
+        Tube<span>Share</span>
+      </a>
+
+      <div class="search-bar">
+        <span class="search-icon">🔍</span>
+        <input type="text" id="search-input" placeholder="חפש סרטון, נושא או משתמש..." />
+      </div>
+
+      <div style="display:flex;gap:0.5rem">
+        <button class="btn btn-ghost" onclick="openAddTopicModal()">+ נושא</button>
+        <button class="btn btn-primary" onclick="openAddVideoModal()">+ שתף סרטון</button>
+      </div>
+    </div>
+  </header>
+
+  <!-- ============================================================
+       TOPICS BAR
+  ============================================================ -->
+  <div class="topics-bar">
+    <div class="topics-inner" id="topics-bar">
+      <button class="topic-chip active" data-topic="all" onclick="filterByTopic('all', this)">
+        🌐 הכל
+      </button>
+      <!-- נושאים נוספים יטענו דינמית כאן -->
+    </div>
+  </div>
+
+  <!-- ============================================================
+       MAIN CONTENT
+  ============================================================ -->
+  <main>
+    <div class="stats-bar">
+      <div class="stats-text">
+        מציג <strong id="count-display">0</strong> סרטונים
+        <span id="topic-display"></span>
+      </div>
+      <div class="time-text" id="last-update"></div>
+    </div>
+
+    <div class="video-grid" id="video-grid">
+      <!-- Skeleton loading placeholders -->
+      <div class="skeleton">
+        <div class="skeleton-video"></div>
+        <div class="skeleton-line"></div>
+        <div class="skeleton-line short"></div>
+        <div class="skeleton-line shorter"></div>
+      </div>
+      <div class="skeleton">
+        <div class="skeleton-video"></div>
+        <div class="skeleton-line"></div>
+        <div class="skeleton-line short"></div>
+        <div class="skeleton-line shorter"></div>
+      </div>
+      <div class="skeleton">
+        <div class="skeleton-video"></div>
+        <div class="skeleton-line"></div>
+        <div class="skeleton-line short"></div>
+        <div class="skeleton-line shorter"></div>
+      </div>
+    </div>
+  </main>
+
+  <!-- ============================================================
+       MODAL: הוספת סרטון
+  ============================================================ -->
+  <div class="modal-overlay" id="add-video-modal">
+    <div class="modal">
+      <div class="modal-header">
+        <span class="modal-title">🎬 שתף סרטון חדש</span>
+        <button class="modal-close" onclick="closeModal('add-video-modal')">✕</button>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">קישור יוטיוב *</label>
+        <input type="url" class="form-input" id="input-url"
+          placeholder="https://www.youtube.com/watch?v=..."
+          oninput="previewVideo(this.value)" />
+        <!-- תצוגה מקדימה תופיע כאן אוטומטית -->
+        <div class="preview-embed" id="url-preview">
+          <iframe id="preview-iframe" allowfullscreen></iframe>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">כותרת הסרטון *</label>
+        <input type="text" class="form-input" id="input-title" placeholder="תן כותרת מעניינת..." />
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">תיאור קצר</label>
+        <textarea class="form-textarea" id="input-desc" placeholder="למה ממליץ על הסרטון הזה?"></textarea>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">נושא *</label>
+        <select class="form-select" id="input-topic">
+          <option value="">בחר נושא...</option>
+        </select>
+      </div>
+
+      <button class="btn btn-primary" style="width:100%;justify-content:center;padding:0.8rem"
+        onclick="submitVideo()">
+        📤 שתף סרטון
+      </button>
+    </div>
+  </div>
+
+  <!-- ============================================================
+       MODAL: הוספת נושא
+  ============================================================ -->
+  <div class="modal-overlay" id="add-topic-modal">
+    <div class="modal">
+      <div class="modal-header">
+        <span class="modal-title">🏷️ הוסף נושא חדש</span>
+        <button class="modal-close" onclick="closeModal('add-topic-modal')">✕</button>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">שם הנושא *</label>
+        <input type="text" class="form-input" id="topic-name" placeholder="למשל: מדע, בישול, כלכלה..." />
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">אמוג'י מייצג</label>
+        <input type="text" class="form-input" id="topic-emoji"
+          placeholder="🎯" maxlength="2" style="font-size:1.5rem;text-align:center" />
+      </div>
+
+      <button class="btn btn-primary" style="width:100%;justify-content:center;padding:0.8rem"
+        onclick="submitTopic()">
+        ✅ הוסף נושא
+      </button>
+    </div>
+  </div>
+
+  <!-- ============================================================
+       MODAL: בחירת שם משתמש (מופיע פעם אחת בכניסה ראשונה)
+  ============================================================ -->
+  <div class="modal-overlay" id="username-modal">
+    <div class="modal username-modal">
+      <div class="modal-icon">👋</div>
+      <h2>ברוך הבא ל-TubeShare!</h2>
+      <p>בחר שם משתמש שיופיע על הסרטונים שתשתף</p>
+      <div class="form-group">
+        <input type="text" class="form-input" id="username-input"
+          placeholder="השם שלך..." maxlength="20"
+          style="text-align:center;font-size:1rem" />
+      </div>
+      <button class="btn btn-primary"
+        style="width:100%;justify-content:center;padding:0.8rem"
+        onclick="saveUsername()">
+        בואו נתחיל! 🚀
+      </button>
+    </div>
+  </div>
+
+  <!-- ============================================================
+       TOAST CONTAINER
+  ============================================================ -->
+  <div id="toast-container"></div>
+
+  <!-- ============================================================
+       JAVASCRIPT – לוגיקת ה-Frontend
+  ============================================================ -->
+  <script>
+    // ============================================================
+    // ⚙️ CONFIG – שים כאן את ה-URL של ה-Web App שלך מ-Apps Script!
+    // אחרי שתפרוס את הסקריפט ב-Google, תקבל URL כזה:
+    // https://script.google.com/macros/s/XXXX/exec
+    // ============================================================
+    const API_URL = "YOUR_GOOGLE_APPS_SCRIPT_URL_HERE";
+
+    // ============================================================
+    // STATE – מצב האפליקציה
+    // ============================================================
+    let currentTopic = "all";
+    let currentSearch = "";
+    let allTopics    = [];
+    let username     = localStorage.getItem("tubeshare_username");
+    let likedVideos  = JSON.parse(localStorage.getItem("tubeshare_liked") || "[]");
+
+    // ============================================================
+    // INIT – הפעלת האפליקציה
+    // ============================================================
+    document.addEventListener("DOMContentLoaded", () => {
+      // בדיקה אם יש שם משתמש שמור
+      if (!username) {
+        openModal("username-modal");
+      }
+
+      // טעינת נושאים וסרטונים
+      loadTopics().then(() => loadVideos());
+
+      // חיפוש עם debounce – מחכה 400ms אחרי שהמשתמש מפסיק להקליד
+      let searchTimer;
+      document.getElementById("search-input").addEventListener("input", (e) => {
+        clearTimeout(searchTimer);
+        searchTimer = setTimeout(() => {
+          currentSearch = e.target.value;
+          loadVideos();
+        }, 400);
+      });
+
+      // סגירת מודל בלחיצה על הרקע
+      document.querySelectorAll(".modal-overlay").forEach(overlay => {
+        overlay.addEventListener("click", (e) => {
+          if (e.target === overlay && overlay.id !== "username-modal") {
+            overlay.classList.remove("open");
+          }
+        });
+      });
+    });
+
+    // ============================================================
+    // 📡 API CALLS – תקשורת עם Google Apps Script
+    // ============================================================
+
+    // שליפת נושאים
+    async function loadTopics() {
+      try {
+        const res  = await fetch(`${API_URL}?action=getTopics`);
+        const data = await res.json();
+        if (data.success) {
+          allTopics = data.topics;
+          renderTopics(data.topics);
+          populateTopicSelect(data.topics);
+        }
+      } catch (err) {
+        showToast("❌ שגיאה בטעינת נושאים", "error");
+      }
+    }
+
+    // שליפת סרטונים
+    async function loadVideos() {
+      showSkeletons();
+      try {
+        let url = `${API_URL}?action=getVideos`;
+        if (currentTopic !== "all") url += `&topic=${encodeURIComponent(currentTopic)}`;
+        if (currentSearch)          url += `&search=${encodeURIComponent(currentSearch)}`;
+
+        const res  = await fetch(url);
+        const data = await res.json();
+
+        if (data.success) {
+          renderVideos(data.videos);
+          updateStats(data.videos.length);
+        }
+      } catch (err) {
+        showToast("❌ שגיאה בטעינת סרטונים – בדוק את ה-API URL", "error");
+        document.getElementById("video-grid").innerHTML = `
+          <div class="empty-state">
+            <div class="empty-icon">⚠️</div>
+            <h3>לא ניתן לטעון סרטונים</h3>
+            <p>ודא שה-API_URL מוגדר נכון בקוד</p>
+          </div>`;
+      }
+    }
+
+    // הוספת סרטון
+    async function submitVideo() {
+      const url   = document.getElementById("input-url").value.trim();
+      const title = document.getElementById("input-title").value.trim();
+      const desc  = document.getElementById("input-desc").value.trim();
+      const topic = document.getElementById("input-topic").value;
+
+      if (!url || !title || !topic) {
+        showToast("⚠️ נא למלא את כל השדות החובה", "error");
+        return;
+      }
+
+      try {
+        const res  = await fetch(API_URL, {
+          method: "POST",
+          body: JSON.stringify({
+            action:      "addVideo",
+            youtube_url: url,
+            title,
+            description: desc,
+            topic,
+            added_by:    username || "אנונימי"
+          })
+        });
+        const data = await res.json();
+
+        if (data.success) {
+          showToast("✅ הסרטון נוסף בהצלחה!", "success");
+          closeModal("add-video-modal");
+          clearForm();
+          loadVideos();
+        } else {
+          showToast("❌ " + (data.error || "שגיאה לא ידועה"), "error");
+        }
+      } catch (err) {
+        showToast("❌ שגיאת רשת", "error");
+      }
+    }
+
+    // הוספת נושא
+    async function submitTopic() {
+      const name  = document.getElementById("topic-name").value.trim();
+      const emoji = document.getElementById("topic-emoji").value.trim();
+
+      if (!name) { showToast("⚠️ נא להזין שם נושא", "error"); return; }
+
+      try {
+        const res  = await fetch(API_URL, {
+          method: "POST",
+          body: JSON.stringify({ action: "addTopic", name, emoji })
+        });
+        const data = await res.json();
+
+        if (data.success) {
+          showToast("✅ הנושא נוסף!", "success");
+          closeModal("add-topic-modal");
+          document.getElementById("topic-name").value  = "";
+          document.getElementById("topic-emoji").value = "";
+          loadTopics();
+        } else {
+          showToast("❌ " + (data.error || "שגיאה"), "error");
+        }
+      } catch (err) {
+        showToast("❌ שגיאת רשת", "error");
+      }
+    }
+
+    // לייק לסרטון
+    async function likeVideo(videoId, btn) {
+      if (likedVideos.includes(videoId)) {
+        showToast("כבר לייקת סרטון זה", "");
+        return;
+      }
+
+      try {
+        const res  = await fetch(`${API_URL}?action=like&id=${videoId}`);
+        const data = await res.json();
+
+        if (data.success) {
+          likedVideos.push(videoId);
+          localStorage.setItem("tubeshare_liked", JSON.stringify(likedVideos));
+          btn.classList.add("liked");
+          btn.querySelector(".like-count").textContent = data.likes;
+        }
+      } catch (err) {}
+    }
+
+    // ============================================================
+    // 🎨 RENDER – הצגת הנתונים
+    // ============================================================
+
+    function renderTopics(topics) {
+      const bar = document.getElementById("topics-bar");
+      // שמירת כפתור "הכל"
+      const allBtn = bar.querySelector('[data-topic="all"]');
+      bar.innerHTML = "";
+      bar.appendChild(allBtn);
+
+      topics.forEach(topic => {
+        const chip = document.createElement("button");
+        chip.className = "topic-chip";
+        chip.dataset.topic = topic.name;
+        chip.innerHTML = `${topic.emoji || "📌"} ${topic.name}`;
+        chip.onclick = () => filterByTopic(topic.name, chip);
+        bar.appendChild(chip);
+      });
+    }
+
+    function populateTopicSelect(topics) {
+      const select = document.getElementById("input-topic");
+      select.innerHTML = '<option value="">בחר נושא...</option>';
+      topics.forEach(t => {
+        select.innerHTML += `<option value="${t.name}">${t.emoji || ""} ${t.name}</option>`;
+      });
+    }
+
+    function renderVideos(videos) {
+      const grid = document.getElementById("video-grid");
+
+      if (videos.length === 0) {
+        grid.innerHTML = `
+          <div class="empty-state">
+            <div class="empty-icon">📭</div>
+            <h3>אין עדיין סרטונים כאן</h3>
+            <p>היה הראשון לשתף סרטון בנושא זה!</p>
+          </div>`;
+        return;
+      }
+
+      grid.innerHTML = videos.map((v, i) => `
+        <div class="video-card" style="animation-delay:${i * 0.06}s">
+          <div class="video-embed">
+            <iframe
+              src="https://www.youtube.com/embed/${v.video_id}?rel=0"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allowfullscreen loading="lazy">
+            </iframe>
+          </div>
+          <div class="video-body">
+            <div class="video-topic-tag">${getTopicEmoji(v.topic)} ${v.topic}</div>
+            <div class="video-title">${escapeHtml(v.title)}</div>
+            ${v.description ? `<div class="video-desc">${escapeHtml(v.description)}</div>` : ""}
+            <div class="video-footer">
+              <div class="video-meta">
+                <div class="avatar">${(v.added_by || "?")[0].toUpperCase()}</div>
+                <span>${escapeHtml(v.added_by || "אנונימי")}</span>
+                <span>·</span>
+                <span class="time-text">${formatTime(v.timestamp)}</span>
+              </div>
+              <button class="like-btn ${likedVideos.includes(v.id) ? "liked" : ""}"
+                onclick="likeVideo('${v.id}', this)">
+                ❤️ <span class="like-count">${v.likes || 0}</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      `).join("");
+    }
+
+    function showSkeletons() {
+      document.getElementById("video-grid").innerHTML = [1,2,3,4,5,6].map(() => `
+        <div class="skeleton">
+          <div class="skeleton-video"></div>
+          <div class="skeleton-line"></div>
+          <div class="skeleton-line short"></div>
+          <div class="skeleton-line shorter"></div>
+        </div>`).join("");
+    }
+
+    // ============================================================
+    // 🔧 UTILS – פונקציות עזר
+    // ============================================================
+
+    function filterByTopic(topic, el) {
+      currentTopic = topic;
+      document.querySelectorAll(".topic-chip").forEach(c => c.classList.remove("active"));
+      el.classList.add("active");
+      loadVideos();
+    }
+
+    function updateStats(count) {
+      document.getElementById("count-display").textContent = count;
+      document.getElementById("topic-display").textContent =
+        currentTopic !== "all" ? `בנושא "${currentTopic}"` : "";
+      document.getElementById("last-update").textContent =
+        "עודכן: " + new Date().toLocaleTimeString("he-IL");
+    }
+
+    function previewVideo(url) {
+      const id      = extractYouTubeId(url);
+      const preview = document.getElementById("url-preview");
+      const iframe  = document.getElementById("preview-iframe");
+
+      if (id) {
+        iframe.src = `https://www.youtube.com/embed/${id}?rel=0`;
+        preview.classList.add("visible");
+      } else {
+        preview.classList.remove("visible");
+        iframe.src = "";
+      }
+    }
+
+    function extractYouTubeId(url) {
+      const patterns = [
+        /(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/|youtube\.com\/shorts\/)([^&\n?#]+)/,
+        /youtube\.com\/v\/([^&\n?#]+)/
+      ];
+      for (const p of patterns) {
+        const m = url.match(p);
+        if (m) return m[1];
+      }
+      return null;
+    }
+
+    function getTopicEmoji(topicName) {
+      const t = allTopics.find(t => t.name === topicName);
+      return t ? (t.emoji || "📌") : "📌";
+    }
+
+    function formatTime(iso) {
+      if (!iso) return "";
+      const d    = new Date(iso);
+      const diff = (Date.now() - d) / 1000;
+      if (diff < 60)   return "עכשיו";
+      if (diff < 3600) return `לפני ${Math.floor(diff/60)} דק'`;
+      if (diff < 86400)return `לפני ${Math.floor(diff/3600)} שע'`;
+      return d.toLocaleDateString("he-IL");
+    }
+
+    function escapeHtml(str) {
+      return String(str)
+        .replace(/&/g,"&amp;").replace(/</g,"&lt;")
+        .replace(/>/g,"&gt;").replace(/"/g,"&quot;");
+    }
+
+    function clearForm() {
+      ["input-url","input-title","input-desc"].forEach(id =>
+        document.getElementById(id).value = "");
+      document.getElementById("input-topic").value = "";
+      document.getElementById("url-preview").classList.remove("visible");
+    }
+
+    // ============================================================
+    // 🪟 MODALS
+    // ============================================================
+    function openModal(id)  { document.getElementById(id).classList.add("open"); }
+    function closeModal(id) { document.getElementById(id).classList.remove("open"); }
+
+    function openAddVideoModal() {
+      if (!username) { openModal("username-modal"); return; }
+      openModal("add-video-modal");
+    }
+
+    function openAddTopicModal() { openModal("add-topic-modal"); }
+
+    function saveUsername() {
+      const val = document.getElementById("username-input").value.trim();
+      if (!val || val.length < 2) {
+        showToast("⚠️ שם חייב להכיל לפחות 2 תווים", "error");
+        return;
+      }
+      username = val;
+      localStorage.setItem("tubeshare_username", username);
+      closeModal("username-modal");
+      showToast(`✅ ברוך הבא, ${username}!`, "success");
+    }
+
+    // ============================================================
+    // 🍞 TOAST
+    // ============================================================
+    function showToast(msg, type = "") {
+      const container = document.getElementById("toast-container");
+      const toast = document.createElement("div");
+      toast.className = `toast ${type}`;
+      toast.textContent = msg;
+      container.appendChild(toast);
+      setTimeout(() => toast.remove(), 3000);
+    }
+  </script>
+</body>
+</html>
