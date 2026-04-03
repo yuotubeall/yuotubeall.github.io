@@ -979,7 +979,22 @@ function updateSvgPreview(){
   }
 }
 function buildColorGrid(){const grid=document.getElementById("clr-grid");COLORS.forEach((c,i)=>{const s=document.createElement("button");s.className="color-swatch"+(i===0?" sel":"");s.style.background=c;s.title=c;s.onclick=()=>{document.querySelectorAll(".color-swatch").forEach(x=>x.classList.remove("sel"));s.classList.add("sel");document.getElementById("t-clr").value=c;};grid.appendChild(s);});}
-function openModal(id){if((id==="vm"||id==="tm")&&!user){openModal("lm");return;}document.getElementById(id).classList.add("open");document.body.style.overflow="hidden";}
+function openModal(id){
+  if((id==="vm"||id==="tm"||id==="clm")&&!user){openModal("lm");return;}
+  document.getElementById(id).classList.add("open");
+  document.body.style.overflow="hidden";
+  
+  // בחירה אוטומטית של הקטגוריה והאשכול בטופס הוספת סרטון אם המשתמש כבר נמצא בתוך אשכול
+  if(id === "vm" && cur !== "all" && curCluster) {
+    const tpSel = document.getElementById("v-tp");
+    if(tpSel) {
+      tpSel.value = cur;
+      onTopicChange(cur); // מפעיל את טעינת האשכולות
+      const clSel = document.getElementById("v-cluster");
+      if(clSel) clSel.value = curCluster; // בוחר את האשכול הנוכחי
+    }
+  }
+}
 function closeModal(id){document.getElementById(id).classList.remove("open");document.body.style.overflow="";}
 function fTopic(t,el){cur=t;curCluster=null;document.querySelectorAll(".t-item,.cluster-item").forEach(b=>b.classList.remove("on"));el.classList.add("on");renderVids(filterVids());}
 function onUrl(val){const id=ytId(val),pb=document.getElementById("v-prev"),pi=document.getElementById("v-fr");if(id){pi.src=`https://www.youtube.com/embed/${id}?rel=0`;pb.classList.add("show");}else{pi.src="";pb.classList.remove("show");}}
