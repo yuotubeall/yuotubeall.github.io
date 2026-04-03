@@ -402,8 +402,8 @@
       <div class="fld"><label class="flbl">תיאור קצר</label><textarea id="v-dsc" class="fta" placeholder="למה כדאי לצפות?" maxlength="300"></textarea></div>
       <div class="fld"><label class="flbl">נושא <span class="flbl-req">*</span></label><select id="v-tp" class="fs" onchange="onTopicChange(this.value)"><option value="">בחר נושא...</option></select></div>
       <div class="fld" id="v-cluster-fld" style="display:none">
-        <label class="flbl">אשכול <span style="color:var(--text3);font-size:10px;text-transform:none;letter-spacing:0">(אופציונלי)</span></label>
-        <select id="v-cluster" class="fs"><option value="">ללא אשכול</option></select>
+        <label class="flbl">אשכול <span class="flbl-req">*</span></label>
+        <select id="v-cluster" class="fs"><option value="">בחר אשכול...</option></select>
       </div>
     </div>
     <div class="m-foot"><button class="btn-cnl" onclick="closeModal('vm')">ביטול</button><button class="btn-sub" onclick="subVideo()" id="sub-vid-btn"><span id="sub-vid-txt">פרסם סרטון</span></button></div>
@@ -461,6 +461,29 @@
     <div class="admin-stat-grid" id="adm-stats"></div>
     <div class="admin-tabs"><button class="adm-tab on" onclick="admTab('videos',this)">סרטונים</button><button class="adm-tab" onclick="admTab('topics',this)">נושאים</button><button class="adm-tab" onclick="admTab('users',this)">משתמשים</button></div>
     <div id="adm-content"></div>
+  </div>
+</div>
+
+<div class="ovl" id="clm">
+  <div class="modal" style="max-width:400px">
+    <div class="m-head">
+      <div class="m-head-l">
+        <div class="m-head-icon"><svg width="14" height="14" viewBox="0 0 14 14" fill="none"><rect x=".5" y=".5" width="13" height="13" rx="3" stroke="currentColor" stroke-width="1.3"/><path d="M3 5h8M3 7.5h5.5M3 10h7" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg></div>
+        <div><div class="m-title">אשכול חדש</div><div class="m-sub" id="cl-topic-lbl"></div></div>
+      </div>
+      <button class="m-close" onclick="closeModal('clm')"><svg width="10" height="10" viewBox="0 0 12 12" fill="none"><path d="M1 1l10 10M11 1L1 11" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg></button>
+    </div>
+    <div class="m-body">
+      <input type="hidden" id="cl-topic-name" />
+      <div class="fld">
+        <label class="flbl">שם האשכול <span class="flbl-req">*</span></label>
+        <input id="cl-nm" class="fi" placeholder="למשל: בישול טבעוני, פיתוח ווב..." maxlength="60" />
+      </div>
+    </div>
+    <div class="m-foot">
+      <button class="btn-cnl" onclick="closeModal('clm')">ביטול</button>
+      <button class="btn-sub" onclick="subCluster()">צור אשכול</button>
+    </div>
   </div>
 </div>
 
@@ -644,10 +667,10 @@ function clearSearch(){document.getElementById("s-inp").value="";document.getEle
 async function subVideo(){
   if(!user){closeModal("vm");openModal("lm");return;}
   const url=document.getElementById("v-url").value.trim(),ttl=document.getElementById("v-ttl").value.trim(),dsc=document.getElementById("v-dsc").value.trim(),tp=document.getElementById("v-tp").value;
-  if(!url||!ttl||!tp){toast("נא למלא את כל שדות החובה","err");return;}
+  const clusterId=document.getElementById("v-cluster")?.value||"";
+  if(!url||!ttl||!tp||!clusterId){toast("נא למלא את כל שדות החובה כולל אשכול","err");return;}
   if(!ytId(url)){toast("קישור יוטיוב לא תקין","err");return;}
   const btn=document.getElementById("sub-vid-btn");btn.disabled=true;document.getElementById("sub-vid-txt").textContent="מפרסם...";
-  const clusterId=document.getElementById("v-cluster")?.value||"";
   try{const r=await fetch(API,{method:"POST",body:JSON.stringify({action:"addVideo",youtube_url:url,title:ttl,description:dsc,topic:tp,cluster_id:clusterId,added_by:user.name,added_by_email:user.email,added_by_picture:user.picture})});const d=await r.json();if(d.success){toast("הסרטון פורסם! 🎉","ok");closeModal("vm");clrForm();loadVids();}else toast(d.error||"שגיאה","err");}
   catch{toast("שגיאת רשת","err");}
   finally{btn.disabled=false;document.getElementById("sub-vid-txt").textContent="פרסם סרטון";}
@@ -725,7 +748,7 @@ function renderComments(id,comments){
   const sec=document.getElementById(`comments-${id}`);if(!sec)return;
   const loginLink=`<a href="#" onclick="openModal('lm');return false" style="color:var(--accent)">התחבר</a>`;
   const inputRow=user?`<div class="comment-input-row"><textarea class="comment-input" id="cinput-${id}" placeholder="הוסף תגובה..." onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();submitComment('${id}')}"></textarea><button class="comment-send" onclick="submitComment('${id}')">שלח</button></div>`:`<div class="comments-empty" style="font-size:11px">${loginLink} כדי להגיב</div>`;
-  const commHtml=comments.length?comments.map(c=>{const av=c.picture?`<img src="${esc(c.picture)}" alt="">`:esc((c.author||"?")[0].toUpperCase());return`<div class="comment-item"><div class="comment-ava">${av}</div><div class="comment-bubble"><div class="comment-author">${esc(c.author||"אנונימי")}</div><div class="comment-text">${esc(c.text)}</div><div class="comment-time">${fmtT(c.timestamp)}</div></div></div>`}).join(""):`<div class="comments-empty">אין תגובות עדיין — היה הראשון!</div>`;
+  const commHtml=comments.length?comments.map(c=>{const authorName = c.author || (c.email ? c.email.split('@')[0] : "משתמש"); const av=c.picture?`<img src="${esc(c.picture)}" alt="">`:esc((authorName)[0].toUpperCase());return`<div class="comment-item"><div class="comment-ava">${av}</div><div class="comment-bubble"><div class="comment-author">${esc(authorName)}</div><div class="comment-text">${esc(c.text)}</div><div class="comment-time">${fmtT(c.timestamp)}</div></div></div>`}).join(""):`<div class="comments-empty">אין תגובות עדיין — היה הראשון!</div>`;
   sec.innerHTML=commHtml+inputRow;
 }
 async function submitComment(id){
@@ -740,7 +763,7 @@ async function submitComment(id){
     if(d.success){
       inp.value="";
       commentsCache[id]=commentsCache[id]||[];
-      commentsCache[id].push({author:user.name,text,timestamp:new Date().toISOString(),picture:user.picture});
+      commentsCache[id].push({author:user.name,email:user.email,text,timestamp:new Date().toISOString(),picture:user.picture});
       renderComments(id,commentsCache[id]);
       const cc=document.querySelector(`.card[data-vid="${id}"] .cc`);if(cc)cc.textContent=parseInt(cc.textContent||"0")+1;
     }else toast(d.error||"שגיאה","err");
@@ -783,13 +806,12 @@ function renderTopics(){
     const isOpen=openTopics.has(t.name);
     const tClusters=allClusters[t.name]||[];
     const btn=document.createElement("button");
-    btn.className="t-item"+(cur===t.name&&!curCluster?" on":"");
+    btn.className="t-item"; // הוסר הסלקציה האוטומטית, עכשיו זה רק תיקייה
     btn.dataset.topic=t.name;
     btn.innerHTML=`<span class="t-inner">${iconHtml}<span class="t-lbl">${esc(t.name)}</span></span><div style="display:flex;align-items:center;gap:2px"><span class="t-cnt" data-tc="${esc(t.name)}">${vcounts[t.name]||"—"}</span><span class="t-expand${isOpen?" open":""}"><svg width="8" height="8" viewBox="0 0 8 8" fill="none"><path d="M1 2.5l3 3 3-3" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>`;
     btn.onclick=e=>{
-      if(e.target.closest(".t-expand")){toggleTopic(t.name,btn);return;}
-      fTopic(t.name,btn);
-      if(!openTopics.has(t.name))toggleTopic(t.name,btn);
+      // הלחיצה על הנושא רק תפתח ותסגור את התיקייה
+      toggleTopic(t.name,btn);
     };
     grp.appendChild(btn);
     const sec=document.createElement("div");sec.className="cluster-sec"+(isOpen?" open":"");sec.id="cls-sec-"+CSS.escape(t.name);
@@ -824,8 +846,11 @@ function renderVids(vs){
     const c=cmap[v.topic]||tclr(v.topic);
     const lk=liked.includes(v.id);
     const isNew=v.timestamp&&(now-new Date(v.timestamp))<86400000;
-    const canDel=user?.isAdmin||user?.email===v.added_by_email;
-    const avaContent=v.added_by_picture?`<img src="${esc(v.added_by_picture)}" alt="">`:esc((v.added_by||"?")[0].toUpperCase());
+    const canDel=user?.isAdmin; // רק מנהל יכול למחוק את הסרטון
+    
+    // Fallback לתצוגת השם - אם אין שם זה יקח את תחילת המייל או יכתוב "משתמש"
+    const authorName = v.added_by || (v.added_by_email ? v.added_by_email.split('@')[0] : "משתמש");
+    const avaContent=v.added_by_picture?`<img src="${esc(v.added_by_picture)}" alt="">`:esc(authorName[0].toUpperCase());
     const avaStyle=v.added_by_picture?"":` style="background:${c}20;border-color:${c}40;color:${c}"`;
     return `<div class="card" data-vid="${esc(v.id)}" style="animation-delay:${i*.04}s">
   <div class="c-vid">
@@ -843,7 +868,7 @@ function renderVids(vs){
     <div class="c-title">${esc(v.title)}</div>
     ${v.description?`<div class="c-desc">${esc(v.description)}</div>`:""}
     <div class="c-foot">
-      <div class="c-author"><div class="ava"${avaStyle}>${avaContent}</div><span class="c-author-name">${esc(v.added_by||"אנונימי")}</span><span class="c-time">· ${fmtT(v.timestamp)}</span></div>
+      <div class="c-author"><div class="ava"${avaStyle}>${avaContent}</div><span class="c-author-name">${esc(authorName)}</span><span class="c-time">· ${fmtT(v.timestamp)}</span></div>
       <div class="c-acts">
         <button class="act-btn${lk?" lkd":""}" onclick="likeV('${esc(v.id)}',this)">
           <svg class="heart-svg" width="12" height="12" viewBox="0 0 14 13" fill="${lk?"currentColor":"none"}"><path d="M7 12S1 8.2 1 4.5C1 2.6 2.6 1 4.5 1c.9 0 1.8.38 2.5 1 .7-.62 1.6-1 2.5-1C11.4 1 13 2.6 13 4.5 13 8.2 7 12 7 12z" stroke="currentColor" stroke-width="1.25"/></svg>
@@ -875,11 +900,14 @@ function renderAdmTab(tab){
   const c=document.getElementById("adm-content");
   if(tab==="videos"){
     if(!allVids.length){c.innerHTML=`<div class="empty"><h3>אין סרטונים</h3></div>`;return;}
-    c.innerHTML=`<table class="tbl"><thead><tr><th>כותרת</th><th>נושא</th><th>שיתף</th><th>לייקים</th><th>צפיות</th><th>תגובות</th><th>תאריך</th><th>פעולות</th></tr></thead><tbody>${allVids.map(v=>`<tr><td style="max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:var(--text)">${esc(v.title)}</td><td><span style="color:${cmap[v.topic]||tclr(v.topic)}">${esc(v.topic)}</span></td><td>${esc(v.added_by||"—")}</td><td>${v.likes||0}</td><td>${fmtViews(v.views)}</td><td>${v.comments||0}</td><td style="white-space:nowrap">${fmtT(v.timestamp)}</td><td><button class="admin-card-btn danger" onclick="confirmDelete('${esc(v.id)}','${esc(v.title).replace(/'/g,"\\'")}')">מחק</button></td></tr>`).join("")}</tbody></table>`;
+    c.innerHTML=`<table class="tbl"><thead><tr><th>כותרת</th><th>נושא</th><th>שיתף</th><th>לייקים</th><th>צפיות</th><th>תגובות</th><th>תאריך</th><th>פעולות</th></tr></thead><tbody>${allVids.map(v=>{
+      const authorName = v.added_by || (v.added_by_email ? v.added_by_email.split('@')[0] : "משתמש");
+      return `<tr><td style="max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:var(--text)">${esc(v.title)}</td><td><span style="color:${cmap[v.topic]||tclr(v.topic)}">${esc(v.topic)}</span></td><td>${esc(authorName)}</td><td>${v.likes||0}</td><td>${fmtViews(v.views)}</td><td>${v.comments||0}</td><td style="white-space:nowrap">${fmtT(v.timestamp)}</td><td><button class="admin-card-btn danger" onclick="confirmDelete('${esc(v.id)}','${esc(v.title).replace(/'/g,"\\'")}')">מחק</button></td></tr>`;
+    }).join("")}</tbody></table>`;
   }else if(tab==="topics"){
     c.innerHTML=`<div class="admin-grid">${topics.map(t=>{const clr=t.color||tclr(t.name),cnt=vcounts[t.name]||0;return`<div class="admin-card"><div class="admin-card-ico" style="background:${clr}20;border:1px solid ${clr}40"><div style="width:14px;height:14px;border-radius:4px;background:${clr}"></div></div><div class="admin-card-body"><div class="admin-card-title">${esc(t.name)}</div><div class="admin-card-sub">${cnt} סרטונים</div><div class="admin-card-acts"><button class="admin-card-btn danger" onclick="confirmDeleteTopic('${esc(t.name).replace(/'/g,"\\'")}')">מחק</button></div></div></div>`;}).join("")}<div class="admin-card" style="border-style:dashed;cursor:pointer" onclick="closeAdmin();openModal('tm')"><div class="admin-card-ico" style="background:var(--accent-dim);border:1px solid var(--accent-mid)"><svg width="16" height="16" viewBox="0 0 14 14" fill="none"><path d="M7 1v12M1 7h12" stroke="var(--accent)" stroke-width="1.5" stroke-linecap="round"/></svg></div><div class="admin-card-body"><div class="admin-card-title" style="color:var(--accent)">הוסף נושא חדש</div><div class="admin-card-sub">לחץ להוספה</div></div></div></div>`;
   }else if(tab==="users"){
-    const usersMap={};allVids.forEach(v=>{const k=v.added_by_email||v.added_by||"?";if(!usersMap[k])usersMap[k]={name:v.added_by||"אנונימי",email:v.added_by_email||"",count:0,likes:0,picture:v.added_by_picture||""};usersMap[k].count++;usersMap[k].likes+=parseInt(v.likes)||0;});
+    const usersMap={};allVids.forEach(v=>{const k=v.added_by_email||v.added_by||"?";if(!usersMap[k])usersMap[k]={name:v.added_by||(v.added_by_email?v.added_by_email.split('@')[0]:"משתמש"),email:v.added_by_email||"",count:0,likes:0,picture:v.added_by_picture||""};usersMap[k].count++;usersMap[k].likes+=parseInt(v.likes)||0;});
     const us=Object.values(usersMap).sort((a,b)=>b.count-a.count);
     if(!us.length){c.innerHTML=`<div class="empty"><h3>אין משתמשים</h3></div>`;return;}
     c.innerHTML=`<table class="tbl"><thead><tr><th>משתמש</th><th>אימייל</th><th>סרטונים</th><th>לייקים</th></tr></thead><tbody>${us.map(u=>`<tr><td style="color:var(--text)"><div style="display:flex;align-items:center;gap:.5rem">${u.picture?`<img src="${esc(u.picture)}" style="width:24px;height:24px;border-radius:50%;object-fit:cover">`:`<div class="ava">${esc(u.name[0]||"?")}</div>`}${esc(u.name)}${u.email===ADMIN_EMAIL?'<span style="color:var(--gold)">👑</span>':""}</div></td><td style="font-size:12px">${esc(u.email||"—")}</td><td>${u.count}</td><td>${u.likes}</td></tr>`).join("")}</tbody></table>`;
@@ -925,8 +953,12 @@ function onTopicChange(tp){
   const sel=document.getElementById("v-cluster");
   if(!tp){fld.style.display="none";return;}
   const clusters=allClusters[tp]||[];
-  sel.innerHTML='<option value="">ללא אשכול</option>'+clusters.map(c=>`<option value="${esc(c.id)}">${esc(c.name)}</option>`).join("");
-  fld.style.display=clusters.length?"":"none";
+  if(clusters.length===0){
+    sel.innerHTML='<option value="">אין אשכולות בתיקייה זו, צור קודם בסרגל הצד</option>';
+  }else{
+    sel.innerHTML='<option value="">בחר אשכול...</option>'+clusters.map(c=>`<option value="${esc(c.id)}">${esc(c.name)}</option>`).join("");
+  }
+  fld.style.display="";
 }
 /* ── SVG TAB ── */
 function switchTopicTab(tab,el){
@@ -969,29 +1001,5 @@ function toast(msg, type=""){
   }
 }
 </script>
-
-<div class="ovl" id="clm">
-  <div class="modal" style="max-width:400px">
-    <div class="m-head">
-      <div class="m-head-l">
-        <div class="m-head-icon"><svg width="14" height="14" viewBox="0 0 14 14" fill="none"><rect x=".5" y=".5" width="13" height="13" rx="3" stroke="currentColor" stroke-width="1.3"/><path d="M3 5h8M3 7.5h5.5M3 10h7" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg></div>
-        <div><div class="m-title">אשכול חדש</div><div class="m-sub" id="cl-topic-lbl"></div></div>
-      </div>
-      <button class="m-close" onclick="closeModal('clm')"><svg width="10" height="10" viewBox="0 0 12 12" fill="none"><path d="M1 1l10 10M11 1L1 11" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg></button>
-    </div>
-    <div class="m-body">
-      <input type="hidden" id="cl-topic-name" />
-      <div class="fld">
-        <label class="flbl">שם האשכול <span class="flbl-req">*</span></label>
-        <input id="cl-nm" class="fi" placeholder="למשל: בישול טבעוני, פיתוח ווב..." maxlength="60" />
-      </div>
-    </div>
-    <div class="m-foot">
-      <button class="btn-cnl" onclick="closeModal('clm')">ביטול</button>
-      <button class="btn-sub" onclick="subCluster()">צור אשכול</button>
-    </div>
-  </div>
-</div>
-
 </body>
 </html>
