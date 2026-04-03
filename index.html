@@ -304,7 +304,6 @@
 <body>
 <div id="app" style="display:flex;flex-direction:column;min-height:100vh">
 
-<!-- HEADER -->
 <header class="hdr">
   <div class="logo">
     <div class="logo-icon"><svg width="16" height="16" viewBox="0 0 20 20" fill="none"><rect x="1" y="1" width="18" height="18" rx="5" stroke="white" stroke-width="1.5"/><path d="M8 6.5l6 3.5-6 3.5V6.5z" fill="white"/></svg></div>
@@ -339,7 +338,6 @@
   </div>
 </header>
 
-<!-- BODY -->
 <div class="layout" style="flex:1">
   <aside class="sdb">
     <div class="sdb-sec">
@@ -378,7 +376,6 @@
 </div>
 </div>
 
-<!-- LOGIN MODAL -->
 <div class="ovl" id="lm">
   <div class="modal" style="max-width:420px">
     <div class="m-head"><div class="m-head-l"><div class="m-head-icon"><svg width="14" height="14" viewBox="0 0 14 14" fill="none"><circle cx="7" cy="5" r="3" stroke="currentColor" stroke-width="1.4"/><path d="M1 13c0-3.3 2.7-6 6-6s6 2.7 6 6" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg></div><div><div class="m-title">כניסה לקהילה</div><div class="m-sub">השתמש בחשבון Google שלך</div></div></div><button class="m-close" onclick="closeModal('lm')"><svg width="10" height="10" viewBox="0 0 12 12" fill="none"><path d="M1 1l10 10M11 1L1 11" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg></button></div>
@@ -396,7 +393,6 @@
   </div>
 </div>
 
-<!-- VIDEO MODAL -->
 <div class="ovl" id="vm">
   <div class="modal">
     <div class="m-head"><div class="m-head-l"><div class="m-head-icon"><svg width="14" height="14" viewBox="0 0 14 14" fill="none"><rect x="1" y="2" width="12" height="10" rx="3" stroke="currentColor" stroke-width="1.3"/><path d="M5.5 5l4 2-4 2V5z" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/></svg></div><div><div class="m-title">שיתוף סרטון חדש</div><div class="m-sub">הוסף סרטון מיוטיוב לקהילה</div></div></div><button class="m-close" onclick="closeModal('vm')"><svg width="10" height="10" viewBox="0 0 12 12" fill="none"><path d="M1 1l10 10M11 1L1 11" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg></button></div>
@@ -414,7 +410,6 @@
   </div>
 </div>
 
-<!-- TOPIC MODAL -->
 <div class="ovl" id="tm">
   <div class="modal" style="max-width:420px">
     <div class="m-head"><div class="m-head-l"><div class="m-head-icon"><svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M7 1v12M1 7h12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></div><div><div class="m-title">נושא חדש</div></div></div><button class="m-close" onclick="closeModal('tm')"><svg width="10" height="10" viewBox="0 0 12 12" fill="none"><path d="M1 1l10 10M11 1L1 11" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg></button></div>
@@ -443,7 +438,6 @@
   </div>
 </div>
 
-<!-- CONFIRM MODAL -->
 <div class="ovl" id="cm">
   <div class="modal" style="max-width:380px">
     <div class="confirm-body">
@@ -457,7 +451,6 @@
 
 <div id="toasts"></div>
 
-<!-- ADMIN -->
 <div class="admin-panel" id="admin-panel">
   <div class="admin-hdr">
     <button class="m-close" onclick="closeAdmin()" style="margin-left:auto"><svg width="12" height="12" viewBox="0 0 14 14" fill="none"><path d="M1 1l12 12M13 1L1 13" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg></button>
@@ -965,8 +958,18 @@ function fmtT(iso){if(!iso)return"";const s=(Date.now()-new Date(iso))/1000;if(s
 function esc(s){return String(s||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;").replace(/'/g,"&#39;");}
 function enc(s){return encodeURIComponent(s);}
 function clrForm(){["v-url","v-ttl","v-dsc"].forEach(id=>document.getElementById(id).value="");document.getElementById("v-tp").value="";const vc=document.getElementById("v-cluster");if(vc)vc.value="";const vf=document.getElementById("v-cluster-fld");if(vf)vf.style.display="none";document.getElementById("v-prev").classList.remove("show");document.getElementById("v-fr").src="";}
-function toast(msg,type=""){const el=document.createElement("div");el.className="toast"
-<!-- CLUSTER MODAL -->
+function toast(msg, type=""){
+  const el=document.createElement("div");
+  el.className="toast " + type;
+  el.textContent=msg;
+  const container = document.getElementById("toasts");
+  if(container) {
+    container.appendChild(el);
+    setTimeout(() => el.remove(), 3000);
+  }
+}
+</script>
+
 <div class="ovl" id="clm">
   <div class="modal" style="max-width:400px">
     <div class="m-head">
@@ -989,3 +992,6 @@ function toast(msg,type=""){const el=document.createElement("div");el.className=
     </div>
   </div>
 </div>
+
+</body>
+</html>
